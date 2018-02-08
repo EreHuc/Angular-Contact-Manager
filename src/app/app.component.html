@@ -1,0 +1,21 @@
+<login *ngIf="appState.state.login"></login>
+<!--<simple-notifications [options]="notifOptions"></simple-notifications>-->
+<div class="overlay {{ appState.state.settingsBar || appState.state.leftBar ? 'show' : '' }}" (click)="hideSettings()"></div>
+<top-bar></top-bar>
+<left-bar></left-bar>
+<right-bar></right-bar>
+<section class="content">
+    <div class="container-fluid"
+         #content
+         slimScroll
+         width="auto"
+         height="calc(100vh - 72px)"
+         size="7px"
+         wheelStep="10"
+    >
+        <div class="container-fluid"></div>
+        <main>
+            <router-outlet></router-outlet>
+        </main>
+    </div>
+</section>

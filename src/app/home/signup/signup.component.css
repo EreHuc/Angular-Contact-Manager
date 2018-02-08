@@ -1,0 +1,11 @@
+.signup-page {
+  background-color: initial;
+  margin: 0 auto;
+}
+
+.signup-page .signup-box .logo a{
+  color: #555;
+}
+.signup-page .signup-box .logo small{
+  color: #555;
+}

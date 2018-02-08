@@ -1,0 +1,117 @@
+<section>
+    <!-- Left Sidebar -->
+    <aside id="leftsidebar" class="sidebar {{ appState.state.leftBar ? 'show' : '' }}" #sidebar>
+        <!-- User Info -->
+        <div class="user-info {{ appState.state.connected ? '' : 'closed' }}" #userInfo>
+            <div class="image">
+                <div class="border-image">
+                    <img [src]="appState.state.userInfo.profilePicture" width="70" height="70" alt="User"
+                         class="userPicture"/>
+                </div>
+            </div>
+            <div class="info-container">
+                <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {{ appState.state.userInfo.firstname || '' }} {{ appState.state.userInfo.lastname|| '' }}
+                </div>
+                <div class="email">{{ appState.state.userInfo.email || '' }}</div>
+                <div class="btn-group user-helper-dropdown">
+                    <i class="material-icons" data-toggle="dropdown" aria-haspopup="true"
+                       aria-expanded="true">keyboard_arrow_down</i>
+                    <ul class="dropdown-menu pull-right">
+                        <li><a href="javascript:void(0);"><i class="material-icons">person</i>Profile</a></li>
+                        <li role="seperator" class="divider"></li>
+                        <li><a href="javascript:void(0);"><i class="material-icons">group</i>Followers</a></li>
+                        <li><a href="javascript:void(0);"><i class="material-icons">shopping_cart</i>Sales</a></li>
+                        <li><a href="javascript:void(0);"><i class="material-icons">favorite</i>Likes</a></li>
+                        <li role="seperator" class="divider"></li>
+                        <li><a href="javascript:void(0);"><i class="material-icons">input</i>Sign Out</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- #User Info -->
+        <!--height="calc(100vh - {{ this.appState.state.connected ? '278' : '143'}}px)"-->
+        <!-- Menu -->
+        <div class="menu">
+            <ul class="list" slimScroll
+                width="auto"
+                size="7px">
+                <li class="header">MAIN NAVIGATION</li>
+                <div *ngIf="appState.state.connected; then private else public"></div>
+                <!-- Public -->
+                <ng-template #public>
+                    <li routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+                        <a [routerLink]=" ['./'] " wave>
+                            <i class="material-icons">home</i>
+                            <span>Home</span>
+                        </a>
+                        <a [routerLink]=" ['./signup'] " class="hide"></a>
+                    </li>
+                    <li routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+                        <a [routerLink]=" ['./detail'] " wave>
+                            <i class="material-icons">home</i>
+                            <span>Detail</span>
+                        </a>
+                    </li>
+                </ng-template>
+                <!-- Private -->
+                <ng-template #private>
+                    <li routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+                        <a [routerLink]=" ['/dashboard/', appState.state.username] " wave>
+                            <i class="material-icons">home</i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+                        <a [routerLink]=" ['/profile/', appState.state.username] " wave>
+                            <i class="material-icons">account_circle</i>
+                            <span>My Profile</span>
+                        </a>
+                    </li>
+                    <li routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+                        <a [routerLink]=" ['/contact'] " wave>
+                            <i class="material-icons">contacts</i>
+                            <span>Contact</span>
+                        </a>
+                    </li>
+                    <li routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+                        <a [routerLink]=" ['/agenda'] " wave>
+                            <i class="material-icons">schedule</i>
+                            <span>Agenda</span>
+                        </a>
+                    </li>
+                    <li routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+                        <a [routerLink]=" ['/email/', appState.state.username] " wave>
+                            <i class="material-icons">email</i>
+                            <span>Email</span>
+                        </a>
+                    </li>
+                    <li routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+                        <a [routerLink]=" ['/documents'] " wave>
+                            <i class="material-icons">folder</i>
+                            <span>Documents</span>
+                        </a>
+                    </li>
+                    <li routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+                        <a [routerLink]=" ['/invite'] " wave>
+                            <i class="material-icons">import_export</i>
+                            <span>Invitation</span>
+                        </a>
+                    </li>
+                </ng-template>
+            </ul>
+        </div>
+        <!-- Footer -->
+        <div class="legal" #legal>
+            <div class="copyright">
+                &copy; EreHuc 2017 <a href="javascript:void(0);">{{ appState.state.title }}</a>.
+            </div>
+            <div class="version">
+                <b>Version: </b> {{ appState.state.version }}
+            </div>
+        </div>
+        <!-- #Footer -->
+        <!-- #Menu -->
+    </aside>
+</section>
+<!-- #END# Left Sidebar -->

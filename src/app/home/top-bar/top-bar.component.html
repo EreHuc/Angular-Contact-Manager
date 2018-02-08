@@ -1,0 +1,42 @@
+<!-- Search Bar -->
+<div class="search-bar {{ appState.state.searchBar ? 'open' : '' }}">
+  <div class="search-icon">
+    <i class="material-icons">search</i>
+  </div>
+  <input type="text" placeholder="START TYPING...">
+  <div class="close-search" (click)="closeSearch()">
+    <i class="material-icons">close</i>
+  </div>
+</div>
+<!-- #END# Search Bar -->
+<!-- Top Bar -->
+<nav class="navbar">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a href="javascript:void(0);" class="navbar-toggle collapsed" data-toggle="collapse"
+         data-target="#navbar-collapse" aria-expanded="false" (click)="myCollapse()"></a>
+      <a href="javascript:void(0);" class="bars" (click)="toggleLeftBar($event)"><i
+        class="material-icons">{{ appState.state.leftBar ? 'arrow_back' : 'menu'}}</i></a>
+      <a class="navbar-brand" href="/">{{ appState.state.title }}</a>
+      <div *ngIf="!appState.state.connected; then public else private"></div>
+      <ng-template #public>
+        <a class="navbar-login" (click)="appState.set('login', true);">LOGIN</a>
+      </ng-template>
+      <ng-template #private>
+        <a class="navbar-login" (click)="appState.resetConnectionState(); router.navigateByUrl('/')">LOGOUT</a>
+      </ng-template>
+    </div>
+    <div class="navbar-collapse" id="navbar-collapse" #navbarCollapse>
+      <ul class="nav navbar-nav navbar-right">
+        <!-- Call Search -->
+        <li>
+          <a href="javascript:void(0);" class="js-search" (click)="openSearch()"><i class="material-icons">search</i></a>
+        </li>
+        <!-- #END# Call Search -->
+        <li class="pull-right"><a href="javascript:void(0);" class="js-right-sidebar" data-close="true" (click)="toogleSettings()"><i
+          class="material-icons">more_vert</i></a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<!-- #Top Bar -->

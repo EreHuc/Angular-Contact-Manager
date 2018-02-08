@@ -1,0 +1,67 @@
+<div class="row clearfix" *ngIf="verify === true; else loading">
+  <div class="col-xs-12">
+    <div class="card">
+      <div class="header">
+        <h2>
+          Your email has been verified
+          <small>
+            One more step before you can start to use {{ appState.state.title }}, please choose an username
+          </small>
+        </h2>
+      </div>
+      <div class="body">
+        <p>
+        </p>
+        <form id="form-username" (submit)="submitUsername($event)">
+          <div class="input-group">
+            <span class="input-group-addon">
+                <i class="material-icons">person</i>
+            </span>
+            <div class="form-line">
+              <input type="text" class="form-control" name="username" placeholder="Username" required autofocus
+                     focusedInput (input)="checkUsernameValidity($event)" (keydown)="preventChar($event)">
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4 col-md-offset-4">
+              <button *ngIf="!submit; else spinnerBtn" class="btn btn-block btn-info waves-effect" type="submit" name="submit">SET USERNAME</button>
+            </div>
+            <ng-template #spinnerBtn>
+              <button class="btn btn-block btn-info waves-effect" name="spinner" type="button" #spinnerBtn>
+                <div class="spinner">
+                  <div class="bounce1"></div>
+                  <div class="bounce2"></div>
+                  <div class="bounce3"></div>
+                </div>
+              </button>
+            </ng-template>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row clearfix" *ngIf="verify === false; else loading">
+  <div class="col-xs-12">
+    <h1 class="error">No such user</h1>
+  </div>
+</div>
+
+<ng-template>
+  <div class="page-loader-wrapper" #loading>
+    <div class="loader">
+      <div class="preloader">
+        <div class="spinner-layer pl-red">
+          <div class="circle-clipper left">
+            <div class="circle"></div>
+          </div>
+          <div class="circle-clipper right">
+            <div class="circle"></div>
+          </div>
+        </div>
+      </div>
+      <p>Checking identity...</p>
+    </div>
+  </div>
+</ng-template>

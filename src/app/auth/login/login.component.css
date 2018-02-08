@@ -1,0 +1,44 @@
+.full-page {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 14;
+  opacity: 0;
+  -webkit-transition: opacity 0.4s;
+  -moz-transition: opacity 0.4s;
+  -ms-transition: opacity 0.4s;
+  -o-transition: opacity 0.4s;
+  transition: opacity 0.4s;
+  cursor: pointer;
+}
+
+.full-page .body {
+  cursor: default;
+}
+
+a#register {
+  cursor: pointer;
+}
+
+.overlay {
+  z-index: 13;
+  opacity: 0;
+}
+
+.overlay.show, .full-page.show {
+  opacity: 1;
+}
+
+.login-page {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -o-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
