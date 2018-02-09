@@ -58,8 +58,8 @@ export class SignupComponent {
 				.catch(err => {
 					let errorMessage = 'An error occurs, please try again later';
 
-					if (err.text() === 'Email already taken') {
-						errorMessage = err.text();
+					if (err.message === 'Email already taken') {
+						errorMessage = err.message;
 						event.target.elements['email'].parentElement.classList.add('error', 'focused');
 					}
 					// this.notif.error(

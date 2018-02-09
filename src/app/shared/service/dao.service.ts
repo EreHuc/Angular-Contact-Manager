@@ -7,10 +7,10 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/observable/throw';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 
-const API_URL: string = '';
-const API_PORT: string = '';
+const API_URL: string = '127.0.0.1';
+const API_PORT: string = '3000';
 
 @Injectable()
 export class DaoService {
@@ -29,8 +29,10 @@ export class DaoService {
 
 	public verifyUser(hash: string): Promise<any> {
 		// todo get to post on server
-		return this.http
-		.post(`${this._url}/users/verify`, {params: {query: {'token.verify': hash}}})
+        let httpParams = new HttpParams();
+        httpParams.append('query', JSON.stringify({query: {'token.verify': hash}}));
+        return this.http
+		.get(`${this._url}/users/verify`, {params: httpParams})
 		.toPromise()
 		.then(res => res)
 		.catch(this.handleError);
@@ -38,8 +40,11 @@ export class DaoService {
 
 	public loginUser(username: string, password: string): Promise<any> {
 		// todo get to post on server
+		let httpParams = new HttpParams();
+		httpParams.append('query', JSON.stringify({username, verified: true}));
+		httpParams.append('password', password);
 		return this.http
-		.post(`${this._url}/users/login`, {params: {query: {username, verified: true}, password}})
+		.get(`${this._url}/users/login`, {params: httpParams})
 		.toPromise()
 		.then(res => res)
 		.catch(this.handleError);

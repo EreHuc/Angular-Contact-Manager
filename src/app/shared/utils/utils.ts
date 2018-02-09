@@ -1,5 +1,5 @@
 import * as CryptoJS from 'crypto-js';
-import {mySuperSecret} from '../../../../key'
+import * as mySuperSecret from '../../../../key.json';
 
 // TODO: refaire ce fichier en mode class et non export func
 
@@ -44,11 +44,11 @@ export function autoSubmit(event: any): Promise<any> {
 }
 
 export function encrypt(data: any): string {
-	return CryptoJS.AES.encrypt(JSON.stringify(data), mySuperSecret.encryptKey).toString();
+	return CryptoJS.AES.encrypt(JSON.stringify(data), (<any>mySuperSecret).encryptKey).toString();
 }
 
 export function decrypt(data: any): any {
-	let bytes = CryptoJS.AES.decrypt(data.toString(), mySuperSecret.encryptKey);
+	let bytes = CryptoJS.AES.decrypt(data.toString(), (<any>mySuperSecret).encryptKey);
 	return parseJson(bytes.toString(CryptoJS.enc.Utf8));
 }
 
