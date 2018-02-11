@@ -12,6 +12,11 @@ let transporter = nodemailer.createTransport(smtpTransport({
 	},
 }));
 
+console.log('emails.js:15 - ', {
+	user: process.env.MAILUSER,
+	pass: process.env.MAILPASSWORD,
+});
+
 const loadVerificationTemplate = (user, url) => {
 	let template = fs.readFileSync(path.join(__dirname, './emails-template/verify-email.template.html'), 'utf-8');
 	template = template.replace('__firstname__', user.firstname);
