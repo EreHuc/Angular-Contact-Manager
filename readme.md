@@ -1,5 +1,7 @@
 # Angular Contact Manager
 
+Demo @ https://angular-contact-manager.herokuapp.com/
+
 ## Init
 
 ```bash
