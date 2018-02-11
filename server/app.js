@@ -11,8 +11,6 @@ const log = require('./lib/utils').log;
 
 const app = express();
 
-const mongoUri = process.env.NODE_ENV === 'production' ? process.env.MONGODB_URI : 'mongodb://localhost:27017';
-
 // uncomment after placing your favicon in /public
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -28,11 +26,11 @@ app.use((req, res, next) => {
 	next();
 });
 
-app.use((err, req, res, next) => {
-	console.log(err);
+app.use((req, res, next) => {
+	console.log('interception');
 	next();
 });
-mongoose.connect(`${mongoUri}/test`);
+mongoose.connect(`${process.env.MONGODB_URI}/test`);
 const db = mongoose.connection;
 mongoose.Promise = global.Promise;
 db.on('error', () => {
@@ -45,11 +43,9 @@ db.once('open', () => {
 		error('uncaughtException', 'app.js:49', err);
 	});
 	require('./api/api')(app);
-	if (process.env.NODE_ENV === 'production') {
-		app.get('*', (req, res) => {
-			res.sendFile(path.join(__dirname, '../dist/index.html'));
-		});
-	}
+	app.get('*', (req, res) => {
+		res.sendFile(path.join(__dirname, '../dist/index.html'));
+	});
 });
 
 module.exports = app;

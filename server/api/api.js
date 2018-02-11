@@ -4,12 +4,6 @@ const log = require('../lib/utils').log;
 
 module.exports = function (app) {
   log('App STARTED', 'api.js:6', 'ITS WORK DUDE !');
-  if (process.env.NODE_ENV !== 'production') {
-    app.get('/api/', (req, res, next) => {
-      log('API', 'api.js:8', 'api called');
-      res.send(200);
-    });
-  }
 
   app.post('/api/users/insert', usersCrud.createUser);
   app.post('/api/users/find', usersCrud.readUsers);
