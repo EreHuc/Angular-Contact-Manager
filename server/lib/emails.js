@@ -7,8 +7,8 @@ const path = require('path');
 let transporter = nodemailer.createTransport(smtpTransport({
 	service: 'Gmail',
 	auth: {
-		user: process.env.MAILUSER || mySuperSecret.user,
-		pass: process.env.MAILPASSWORD || mySuperSecret.password,
+		user: process.env.MAILUSER,
+		pass: process.env.MAILPASSWORD,
 	},
 }));
 
@@ -34,6 +34,7 @@ const sendVerificationMail = (user) => {
 	return new Promise((resolve, reject) => {
 		transporter.sendMail(mailOptions, (error, info) => {
 			if (error) {
+				console.log('emails.js:37 - ', error);
 				reject(new Error(error));
 			}
 			resolve({hash});
