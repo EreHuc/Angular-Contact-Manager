@@ -26,10 +26,6 @@ app.use((req, res, next) => {
 	next();
 });
 
-app.use((req, res, next) => {
-	console.log('interception');
-	next();
-});
 mongoose.connect(`${process.env.MONGODB_URI}/test`);
 const db = mongoose.connection;
 mongoose.Promise = global.Promise;
@@ -44,6 +40,7 @@ db.once('open', () => {
 	});
 	require('./api/api')(app);
 	app.get('*', (req, res) => {
+		console.log('app.js:47 - ', 'hey i want index html !');
 		res.sendFile(path.join(__dirname, '../dist/index.html'));
 	});
 });
