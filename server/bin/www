@@ -10,7 +10,6 @@ var http = require('http');
  * Get port from environment and store in Express.
  */
 
-console.log(`${process.env.HOST}:${process.env.PORT}`)
 var port = normalizePort(process.env.PORT || '8080');
 app.set('port', port);
 
@@ -72,12 +71,4 @@ function onError(error) {
     default:
       throw error;
   }
-}
-
-/**
- * Event listener for HTTP server "listening" event.
- */
-
-function onListening() {
-   console.log(`Listening on ${process.env.HOST}:${process.env.PORT}`);
 }

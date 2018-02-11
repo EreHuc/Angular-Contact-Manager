@@ -40,7 +40,6 @@ db.once('open', () => {
 	});
 	require('./api/api')(app);
 	app.get('*', (req, res) => {
-		console.log('app.js:47 - ', 'hey i want index html !');
 		res.sendFile(path.join(__dirname, '../dist/index.html'));
 	});
 });
