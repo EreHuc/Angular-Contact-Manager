@@ -4,6 +4,7 @@
 
 const app = require('../app');
 const debug = require('debug')('server:server');
+const fs = require('fs');
 const key = fs.readFileSync('../encryption/private.key');
 const cert = fs.readFileSync('../encryption/primary.crt');
 const https = require('https');
@@ -23,7 +24,7 @@ app.set('port', port);
  * Create HTTP server.
  */
 
-var server = https.createServer(app);
+var server = https.createServer(options, app);
 
 /**
  * Listen on provided port, on all network interfaces.
