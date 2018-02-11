@@ -35,7 +35,3 @@ npm run server:dev
 Linting for server and src
 
 Es6-fy and Ts-fy server
-
-Many change on angular app but it work for now (public part)
-
-Testing application

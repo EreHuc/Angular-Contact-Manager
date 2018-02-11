@@ -249,7 +249,6 @@ const setUsername = (req, res, next) => {
 };
 
 const getContactList = (req, res, next) => {
-	//todo change userId const retrieving
 	const userId = utils.parseJson(req.params.userId);
 	findUsers({_id: userId}, {
 		emails: 0, token: 0, verified: 0, createdAt: 0, username: 0,
