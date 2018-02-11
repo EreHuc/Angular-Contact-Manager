@@ -15,7 +15,7 @@ const API_URL: string = environment.apiUrl;
 @Injectable()
 export class DaoService {
 
-	private _url = `/api`;
+	private _url = `${API_URL}/api`;
 
 	constructor(private http: HttpClient) {
 	}
