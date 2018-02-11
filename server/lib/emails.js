@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 
 if (process.env.NODE_ENV !== 'production') {
-	const mySuperSecret = require('../../key')[0];
+	// const mySuperSecret = require('../../key')[0];
 }
 
 let transporter;

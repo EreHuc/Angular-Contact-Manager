@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "start": "node ./server/bin/www"
+    "start": "node ./server/bin/www",
+    "prod": "NODE_ENV=production node ./server/bin/www"
   },
   "private": true,
   "dependencies": {

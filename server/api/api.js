@@ -3,6 +3,7 @@ const userInfosCrud = require('../crud/user-infos.crud');
 const log = require('../lib/utils').log;
 
 module.exports = function (app) {
+  log('App STARTED', 'api.js:6', 'ITS WORK DUDE !');
   if (process.env.NODE_ENV !== 'production') {
     app.get('/api/', (req, res, next) => {
       log('API', 'api.js:8', 'api called');
