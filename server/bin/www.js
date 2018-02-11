@@ -32,7 +32,7 @@ var server = https.createServer(options, app);
  */
 
 server.listen(port);
-http.createServer(app).listen(8080);
+http.createServer(app).listen(80);
 
 /**
  * Normalize a port into a number, string, or false.
