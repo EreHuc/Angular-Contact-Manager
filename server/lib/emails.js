@@ -4,12 +4,13 @@ const utils = require('./utils');
 const fs = require('fs');
 const path = require('path');
 
-let transporter = nodemailer.createTransport({
-		host: 'localhost',
-		port: 3000,
-		secure: false,
-	});
-
+let transporter = nodemailer.createTransport(smtpTransport({
+	service: 'Gmail',
+	auth: {
+		user: process.env.MAILUSER || mySuperSecret.user,
+		pass: process.env.MAILPASSWORD || mySuperSecret.password,
+	},
+}));
 
 const loadVerificationTemplate = (user, url) => {
 	let template = fs.readFileSync(path.join(__dirname, './emails-template/verify-email.template.html'), 'utf-8');
@@ -28,7 +29,7 @@ const verificationEmail = (user, url) => ({
 
 const sendVerificationMail = (user) => {
 	const hash = utils.hash(32);
-	const url = `http://${process.env.APPURL}/verify/${hash}`;
+	let url = `http://${process.env.APPURL}/verify/${hash}`;
 	const mailOptions = verificationEmail(user, url);
 	return new Promise((resolve, reject) => {
 		transporter.sendMail(mailOptions, (error, info) => {
