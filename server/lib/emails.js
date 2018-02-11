@@ -34,7 +34,7 @@ const verificationEmail = (user, url) => ({
 
 const sendVerificationMail = (user) => {
 	const hash = utils.hash(32);
-	let url = `http://${process.env.APPURL}/verify/${hash}`;
+	let url = `${process.env.APPURL}/verify/${hash}`;
 	const mailOptions = verificationEmail(user, url);
 	return new Promise((resolve, reject) => {
 		transporter.sendMail(mailOptions, (error, info) => {
