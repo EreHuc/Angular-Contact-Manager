@@ -16,6 +16,10 @@
     "server:debug": "node $NODE_DEBUG_OPTION ./server/bin/www"
   },
   "postinstall": "ng build --aot -prod",
+  "engines": {
+    "node": "6.11.2",
+    "npm": "5.6.0"
+  },
   "private": true,
   "dependencies": {
     "@angular/animations": "^5.2.0",
@@ -50,7 +54,8 @@
     "nodemailer-smtp-transport": "^2.7.4",
     "rxjs": "^5.5.6",
     "serve-favicon": "~2.4.2",
-    "zone.js": "^0.8.19"
+    "zone.js": "^0.8.19",
+    "typescript": "~2.5.3"
   },
   "devDependencies": {
     "@angular/cli": "1.6.8",
@@ -60,6 +65,7 @@
     "@types/datatables.net": "^1.10.8",
     "@types/jquery": "^3.3.0",
     "chalk": "^2.1.0",
+    "enhanced-resolve": "^3.3.0",
     "eslint": "^4.17.0",
     "eslint-config-airbnb": "^16.1.0",
     "eslint-plugin-import": "^2.8.0",
