@@ -11,8 +11,8 @@ import { HttpClient } from '@angular/common/http';
 import { UserInfo } from '../../user-info';
 import { environment } from '../../../environments/environment';
 
-const API_URL: string = environment.production ? 'angular-contact-manager.herokuapp.com' : '127.0.0.1:3000';
-
+const API_URL: string = environment.apiUrl;
+console.log('dao.service.ts:15 - ', API_URL);
 @Injectable()
 export class DaoService {
 
