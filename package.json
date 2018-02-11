@@ -4,11 +4,12 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "NODE_ENV=production node ./server/bin/www",
     "build": "ng build --aot --prod",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
+    "dev": "ng serve",
     "server:watch": "nodemon ./server/bin/www",
     "server:dev": "node ./server/bin/www",
     "server:prod": "NODE_ENV=production node ./server/bin/www",
