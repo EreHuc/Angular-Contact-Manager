@@ -2,7 +2,8 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { AppState } from '../../shared/service/app.service';
 import { DaoService } from '../../shared/service/dao.service';
-import { autoSubmit, log } from '../../shared/utils/utils';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+
 // import { NotificationsService } from 'angular2-notifications/dist';
 
 @Component({
@@ -13,18 +14,19 @@ import { autoSubmit, log } from '../../shared/utils/utils';
 
 export class LoginComponent implements OnInit {
 	public submit = false;
-	public username = localStorage.getItem('username');
 
 	@ViewChild('overlay') private overlay: ElementRef;
 	@ViewChild('fullPage') private page: ElementRef;
 	@ViewChild('register') private register: ElementRef;
 
-	constructor(
-		public appState: AppState,
-		private router: Router,
-		private daoService: DaoService,
-		// private notif: NotificationsService
+	loginForm: FormGroup;
+
+	constructor(public appState: AppState,
+				private router: Router,
+				private daoService: DaoService,
+				// private notif: NotificationsService
 	) {
+		this.loginForm = this.buildForm();
 	}
 
 	public ngOnInit() {
@@ -47,24 +49,22 @@ export class LoginComponent implements OnInit {
 		}
 	}
 
-	public loginSubmit(event) {
+	public loginSubmit(loginInfos) {
 		this.submit = true;
-		autoSubmit(event)
-		.then(data => {
-			this.daoService.loginUser(data.username.trim().toLowerCase(), data.password)
-			.then(response => {
+		this.daoService.loginUser(loginInfos.username.trim().toLowerCase(), loginInfos.password)
+			.subscribe(response => {
 				this.submit = false;
 				this.appState.setConnectionState(response._id, response.username, response.userInfos);
 				this.router.navigateByUrl(`/profile/${response.username}`);
-				if (data.rememberme) {
+				if (loginInfos.rememberme) {
 					localStorage.setItem('username', response.username);
 				}
 				this.closeLoginPage({target: this.page.nativeElement});
-			})
-			.catch(err => {
+				this.appState.saveState();
+			}, err => {
+				// todo debug error handler
 				this.submit = false;
-				let message = err.text();
-				if (message === 'Invalid password') {
+				if (err === 'Invalid password') {
 					// this.notif.error(
 					// 	'Error',
 					// 	message
@@ -75,15 +75,14 @@ export class LoginComponent implements OnInit {
 					// 	'An error occurred, please try again'
 					// );
 				}
-				log('errorLogin', 'login.component.ts:78', message);
 			});
-		})
-		.catch(err => {
-			this.submit = false;
-			// this.notif.error(
-			// 	'Error',
-			// 	'Please fill out required fields'
-			// );
+	}
+
+	private buildForm(): FormGroup {
+		return new FormGroup({
+			username: new FormControl(localStorage.getItem('username') || '', Validators.required),
+			password: new FormControl('', Validators.required),
+			rememberme: new FormControl('')
 		});
 	}
 }

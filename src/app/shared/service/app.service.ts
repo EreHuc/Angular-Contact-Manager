@@ -1,12 +1,18 @@
 import { Injectable } from '@angular/core';
-import { decrypt, log } from '../utils/utils';
+import { UtilsService } from './utils.service';
+import { CookieService } from 'ngx-cookie-service';
 
 export type InternalStateType = {
 	[key: string]: any
 };
 
+const expireTime = 1;
+
 @Injectable()
 export class AppState {
+
+	constructor(private utils: UtilsService, private cookie: CookieService) {
+	}
 
 	public _state: InternalStateType = {};
 
@@ -40,23 +46,23 @@ export class AppState {
 		/**
 		 * Internally mutate our state.
 		 */
-		return this._state[prop] = value;
+		this._state[prop] = value;
+		this.saveState();
 	}
 
 	public initAppState(): void {
-		// let _stateMapHash = localStorage.getItem('stateMap');
+		let _stateMapHash = this.cookie.get('stateMap');
 		let stateMap = {};
-		// if (_stateMapHash) {
-		// 	stateMap = decrypt(_stateMapHash);
-		// 	log('initAppState', 'app.service.ts:51', stateMap);
-		// } else {
-		stateMap = {
-			title: 'Angular - Contact Manager',
-			version: '1.0',
-		};
-		this.resetUiState();
-		this.resetConnectionState();
-		// }
+		if (_stateMapHash) {
+			stateMap = this.utils.decrypt(_stateMapHash);
+		} else {
+			stateMap = {
+				title: 'Angular - Contact Manager',
+				version: '1.0',
+			};
+			this.resetUiState();
+			this.resetConnectionState();
+		}
 		Object.keys(stateMap).forEach(key => {
 			this.set(key, stateMap[key]);
 		});
@@ -84,6 +90,7 @@ export class AppState {
 		Object.keys(stateMap).forEach(key => {
 			this.set(key, stateMap[key]);
 		});
+		this.saveState();
 	}
 
 	public setConnectionState(userId, username, userInfo): void {
@@ -103,5 +110,10 @@ export class AppState {
 		 * Simple object clone.
 		 */
 		return JSON.parse(JSON.stringify(object));
+	}
+
+	public saveState() {
+		const expireDate = new Date().setDate(new Date().getDate() + expireTime);
+		this.cookie.set('stateMap', this.utils.encrypt(this._state), expireDate);
 	}
 }

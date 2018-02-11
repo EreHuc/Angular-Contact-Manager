@@ -7,7 +7,8 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/observable/throw';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
+import { UserInfo } from '../../user-info';
 
 const API_URL: string = '127.0.0.1';
 const API_PORT: string = '3000';
@@ -20,59 +21,50 @@ export class DaoService {
 	constructor(private http: HttpClient) {
 	}
 
-	public createNewUser(user: any): Promise<any> {
-		return this.http.post(`${this._url}/users/insert`, user)
-		.toPromise()
-		.then(res => res)
-		.catch(this.handleError);
-	}
-
-	public verifyUser(hash: string): Promise<any> {
-		// todo get to post on server
-        let httpParams = new HttpParams();
-        httpParams.append('query', JSON.stringify({query: {'token.verify': hash}}));
-        return this.http
-		.get(`${this._url}/users/verify`, {params: httpParams})
-		.toPromise()
-		.then(res => res)
-		.catch(this.handleError);
-	}
-
-	public loginUser(username: string, password: string): Promise<any> {
-		// todo get to post on server
-		let httpParams = new HttpParams();
-		httpParams.append('query', JSON.stringify({username, verified: true}));
-		httpParams.append('password', password);
+	public createNewUser(user: any): Observable<any> {
 		return this.http
-		.get(`${this._url}/users/login`, {params: httpParams})
-		.toPromise()
-		.then(res => res)
-		.catch(this.handleError);
-	}
-
-	public findUser(query, projection?, options?): Promise<any> {
-		return this.http
-		.get(`${this._url}/users/get`, {params: {query, projection, options}})
-		.toPromise()
-		.then(res => res)
-		.catch(this.handleError);
-	}
-
-	public setUsername(username, userId): Promise<any> {
-		return this.http
-		.put(`${this._url}/users/set-username`, {username, userId})
-		.toPromise()
-		.then(res => res)
-		.catch(this.handleError);
-	}
-
-	public getContactList(userId): Observable<Response> {
-		return this.http.get(`${this._url}/users/contact-list`, {params: {userId}})
+			.post(`${this._url}/users/insert`, user)
 			.map(res => res)
-			.catch((error: any) => Observable.throw(error.json() || 'Server Error'));
+			.catch(this.handleError);
 	}
 
-	private handleError(error: any): Promise<any> {
-		return Promise.reject(error);
+	public verifyUser(hash: string): Observable<any> {
+		return this.http
+			.put(`${this._url}/users/verify`, {query: {'token.verify': hash}})
+			.map(res => res)
+			.catch(this.handleError);
+	}
+
+	public loginUser(username: string, password: string): Observable<any> {
+		return this.http
+			.post(`${this._url}/users/login`, {query: {username, verified: true}, password})
+			.map(res => res)
+			.catch(this.handleError);
+	}
+
+	public findUser(query, projection?, options?): Observable<any> {
+		return this.http
+			.post(`${this._url}/users/find`, {query, projection, options})
+			.map(res => res)
+			.catch(this.handleError);
+	}
+
+	public setUsername(username:string, userId:string): Observable<any> {
+		return this.http
+			.post(`${this._url}/users/set-username`, {username, userId})
+			.map(res => res)
+			.catch(this.handleError);
+	}
+
+	public getContactList(userId: string): Observable<UserInfo[]> {
+		return this.http
+			.get(`${this._url}/users/contact-list/${userId}`)
+			.map(res => res)
+			.catch(this.handleError);
+	}
+
+	private handleError(error: any): Observable<any> {
+		console.log('dao.service.ts:66 - ', error);
+		return Observable.throw(error.error || 'Server Error');
 	}
 }

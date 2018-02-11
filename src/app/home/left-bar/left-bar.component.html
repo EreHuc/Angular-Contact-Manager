@@ -35,11 +35,11 @@
         <div class="menu">
             <ul class="list" slimScroll
                 width="auto"
-                size="7px">
+                size="7px"
+                height="calc(100vh - {{ this.appState.state.connected ? '278' : '143'}}px)"
+            >
                 <li class="header">MAIN NAVIGATION</li>
-                <div *ngIf="appState.state.connected; then private else public"></div>
-                <!-- Public -->
-                <ng-template #public>
+                <div *ngIf="!appState.state.connected;">
                     <li routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
                         <a [routerLink]=" ['./'] " wave>
                             <i class="material-icons">home</i>
@@ -53,9 +53,9 @@
                             <span>Detail</span>
                         </a>
                     </li>
-                </ng-template>
+                </div>
                 <!-- Private -->
-                <ng-template #private>
+                <div *ngIf="appState.state.connected;">
                     <li routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
                         <a [routerLink]=" ['/dashboard/', appState.state.username] " wave>
                             <i class="material-icons">home</i>
@@ -98,7 +98,7 @@
                             <span>Invitation</span>
                         </a>
                     </li>
-                </ng-template>
+                </div>
             </ul>
         </div>
         <!-- Footer -->

@@ -39,7 +39,7 @@ const verificationEmail = (user, url) => ({
 
 const sendVerificationMail = (user) => {
   const hash = utils.hash(32);
-  const url = `http://${process.env.host}:5000/verify/${hash}`;
+  const url = `http://${process.env.host}:${process.env.NODE_ENV === 'production' ? 3000 : 4200}/verify/${hash}`;
   const mailOptions = verificationEmail(user, url);
   return new Promise((resolve, reject) => {
     transporter.sendMail(mailOptions, (error, info) => {

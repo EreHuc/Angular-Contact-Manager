@@ -1,0 +1,59 @@
+<div class="overlay" #overlay></div>
+<div class="full-page" #fullPage (click)="closeLoginPage($event)">
+    <div class="login-page">
+        <div class="card" style="margin-bottom: 0">
+            <div class="body">
+                <h5 class="text-info text-center">
+                    Sign in to start your session
+                </h5>
+                <form [formGroup]="loginForm" id="sign_in" novalidate>
+                    <div class="input-group">
+            <span class="input-group-addon">
+                <i class="material-icons">person</i>
+            </span>
+                        <div class="form-line" [class.error]="loginForm.controls.username.invalid">
+                            <input type="text" class="form-control" formControlName="username" placeholder="Username *"
+                                   autofocus
+                                   focusedInput autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="input-group">
+            <span class="input-group-addon">
+                <i class="material-icons">lock</i>
+            </span>
+                        <div class="form-line" [class.error]="loginForm.controls.password.invalid">
+                            <input type="password" class="form-control" formControlName="password"
+                                   placeholder="Password *" focusedInput>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-8 p-t-5">
+                            <input type="checkbox" formControlName="rememberme" id="rememberme"
+                                   class="filled-in chk-col-light-blue">
+                            <label for="rememberme">Remember Me</label>
+                        </div>
+                        <div class="col-xs-4">
+                            <button *ngIf="!submit;"
+                                    class="btn btn-block btn-info waves-effect"
+                                    type="submit"
+                                    name="submit"
+                                    (click)="loginSubmit(loginForm.value)"
+                                    [disabled]="loginForm.invalid"
+                            >SIGN IN
+                            </button>
+                            <app-spinner-btn *ngIf="submit"></app-spinner-btn>
+                        </div>
+                    </div>
+                    <div class="row m-t-15 m-b--20">
+                        <div class="col-xs-6">
+                            <a id="register" #register>Register Now!</a>
+                        </div>
+                        <div class="col-xs-6 align-right">
+                            <a href="/">Forgot Password?</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

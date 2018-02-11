@@ -12,9 +12,6 @@ export class FocusedDirective {
 	private onFocusIn() {
 		let parentElem = this.el.nativeElement.parentElement;
 		let parentClassList = parentElem.classList.value;
-		if (~parentClassList.indexOf('error')) {
-			parentElem.classList.remove('error');
-		}
 		if (~parentClassList.indexOf('form-line')) {
 			parentElem.classList.add('focused');
 		}
@@ -23,6 +20,9 @@ export class FocusedDirective {
 	@HostListener('focusout')
 	private onFocusOut() {
 		let parentElem = this.el.nativeElement.parentElement;
-		parentElem.classList.remove('focused');
+		let parentClassList = parentElem.classList.value;
+		if (!~parentClassList.indexOf('error')) {
+			parentElem.classList.remove('focused');
+		}
 	}
 }

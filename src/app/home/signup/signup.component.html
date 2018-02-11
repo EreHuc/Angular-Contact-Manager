@@ -1,119 +1,128 @@
 <div class="row clearfix">
-  <div class="col-xs-12">
-    <div class="card">
-      <div class="body">
-        <h2>
-          {{ appState.state.title }}
-          <small>Made with AngularJS</small>
-        </h2>
-      </div>
+    <div class="col-xs-12">
+        <div class="card">
+            <div class="body">
+                <h2>
+                    {{ appState.state.title }}
+                    <small>Made with AngularJS</small>
+                </h2>
+            </div>
+        </div>
     </div>
-  </div>
-  <div class="col-xs-12 col-md-4">
-    <div class="card">
-      <div class="body">
-        <h5 class="text-center text-info">
-          Register a new membership
-        </h5>
-        <form id="sign_up" (submit)="signupSubmit($event)">
-          <div class="input-group">
+    <div class="col-xs-12 col-md-4">
+        <div class="card">
+            <div class="body">
+                <h5 class="text-center text-info">
+                    Register a new membership
+                </h5>
+                <form id="sign_up" [formGroup]="signupForm">
+                    <div class="input-group">
             <span class="input-group-addon">
                 <i class="material-icons">person</i>
             </span>
-            <div class="form-line">
-              <input type="text" class="form-control" name="firstname" placeholder="First Name*" required autofocus
-                     focusedInput autocomplete="off">
-            </div>
-          </div>
-          <div class="input-group">
+                        <div class="form-line" [class.error]="signupForm.controls.firstname.invalid">
+                            <input type="text" class="form-control" formControlName="firstname"
+                                   placeholder="First Name*" autofocus
+                                   focusedInput autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="input-group">
             <span class="input-group-addon">
                 <i class="material-icons">person</i>
             </span>
-            <div class="form-line">
-              <input type="text" class="form-control" name="lastname" placeholder="Last Name*" required focusedInput
-                     autocomplete="off">
-            </div>
-          </div>
-          <div class="input-group">
+                        <div class="form-line" [class.error]="signupForm.controls.lastname.invalid">
+                            <input type="text" class="form-control" formControlName="lastname" placeholder="Last Name*"
+                                   required focusedInput
+                                   autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="input-group">
             <span class="input-group-addon">
                 <i class="material-icons">email</i>
             </span>
-            <div class="form-line">
-              <input type="email" class="form-control" name="email" placeholder="Email Address*" required focusedInput
-                     autocomplete="off">
-            </div>
-          </div>
-          <div class="input-group">
+                        <div class="form-line" [class.error]="signupForm.controls.email.invalid">
+                            <input type="email" class="form-control" formControlName="email"
+                                   placeholder="Email Address*" focusedInput
+                                   autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="input-group">
             <span class="input-group-addon">
                 <i class="material-icons">lock</i>
             </span>
-            <div class="form-line">
-              <input type="password" class="form-control" name="password" minlength="6" placeholder="Password*" required
-                     focusedInput autocomplete="off">
-            </div>
-          </div>
-          <div class="input-group">
+                        <div class="form-line" [class.error]="signupForm.controls.password.invalid">
+                            <input type="password" class="form-control" formControlName="password"
+                                   placeholder="Password*"
+                                   focusedInput autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="input-group">
             <span class="input-group-addon">
                 <i class="material-icons">lock</i>
             </span>
-            <div class="form-line">
-              <input type="password" class="form-control" name="confirm" minlength="6" placeholder="Confirm Password*"
-                     required focusedInput autocomplete="off">
+                        <div class="form-line" [class.error]="signupForm.controls.confirm.invalid">
+                            <input type="password" class="form-control" formControlName="confirm"
+                                   placeholder="Confirm Password*"
+                                   required focusedInput autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <input type="checkbox" formControlName="terms" id="terms" class="filled-in chk-col-cyan">
+                        <label for="terms" focusedInput>I read and agree to the <a href="javascript:void(0);">terms of
+                            usage</a>.*</label>
+                    </div>
+                    <button *ngIf="!submit;" class="btn btn-block btn-lg btn-info" name="submit" type="submit"
+                            wave-ripple (click)="signupSubmit(signupForm.value)" [disabled]="signupForm.invalid">SIGN UP
+                    </button>
+                    <app-spinner-btn *ngIf="submit"></app-spinner-btn>
+                    <div class="m-t-25 m-b--5 align-center">
+                        <a href="#" (click)="appState.set('login', true)">You already have a membership?</a>
+                    </div>
+                </form>
             </div>
-          </div>
-          <div class="form-group">
-            <input type="checkbox" name="terms" id="terms" class="filled-in chk-col-cyan" required>
-            <label for="terms" focusedInput>I read and agree to the <a href="javascript:void(0);">terms of
-              usage</a>.*</label>
-          </div>
-          <button *ngIf="!submit; else spinnerBtn" class="btn btn-block btn-lg btn-info" name="submit" type="submit"
-                  wave-ripple>SIGN UP
-          </button>
-          <ng-template #spinnerBtn>
-            <button class="btn btn-block btn-lg btn-info" name="spinner" type="button" wave-ripple #spinnerBtn>
-              <div class="spinner">
-                <div class="bounce1"></div>
-                <div class="bounce2"></div>
-                <div class="bounce3"></div>
-              </div>
-            </button>
-          </ng-template>
-          <div class="m-t-25 m-b--5 align-center">
-            <a href="#" (click)="appState.set('login', true)">You already have a membership?</a>
-          </div>
-        </form>
-      </div>
+        </div>
     </div>
-  </div>
-  <div class="col-xs-12 col-md-8">
-    <div class="card">
-      <div class="body">
-        <p>
+    <div class="col-xs-12 col-md-8">
+        <div class="card">
+            <div class="body">
+                <p>
 
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam vitae nisi suscipit, efficitur orci sit amet,
-          accumsan massa. Donec id nulla dapibus, pharetra est a, tincidunt mauris. Cras quis ornare turpis, non
-          lobortis magna. Mauris ut rutrum dui. Aliquam erat volutpat. Aenean nec pulvinar elit, eu aliquam tellus.
-          Nullam ante nisi, facilisis ac rhoncus in, bibendum at ante. Vestibulum tellus tortor, commodo nec mauris in,
-          sagittis pretium eros. In quis ex lacinia, mollis nibh vitae, commodo justo. Cras molestie vel lorem quis
-          rhoncus. Curabitur feugiat, diam et posuere varius, diam mi luctus lectus, nec pretium libero nisi nec odio.
-        </p>
-        <p>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam vitae nisi suscipit, efficitur orci
+                    sit amet,
+                    accumsan massa. Donec id nulla dapibus, pharetra est a, tincidunt mauris. Cras quis ornare turpis,
+                    non
+                    lobortis magna. Mauris ut rutrum dui. Aliquam erat volutpat. Aenean nec pulvinar elit, eu aliquam
+                    tellus.
+                    Nullam ante nisi, facilisis ac rhoncus in, bibendum at ante. Vestibulum tellus tortor, commodo nec
+                    mauris in,
+                    sagittis pretium eros. In quis ex lacinia, mollis nibh vitae, commodo justo. Cras molestie vel lorem
+                    quis
+                    rhoncus. Curabitur feugiat, diam et posuere varius, diam mi luctus lectus, nec pretium libero nisi
+                    nec odio.
+                </p>
+                <p>
 
-          Morbi auctor ut enim convallis tincidunt. Phasellus sit amet quam erat. Etiam ut nulla posuere, sagittis felis
-          non, commodo tortor. Proin tempor sem diam, a tempor enim posuere nec. Quisque eget tellus hendrerit,
-          tincidunt est vel, gravida eros. Cras volutpat ut risus aliquam semper. Vivamus ac eleifend sapien, sit amet
-          elementum lacus.
-        </p>
-        <p>
+                    Morbi auctor ut enim convallis tincidunt. Phasellus sit amet quam erat. Etiam ut nulla posuere,
+                    sagittis felis
+                    non, commodo tortor. Proin tempor sem diam, a tempor enim posuere nec. Quisque eget tellus
+                    hendrerit,
+                    tincidunt est vel, gravida eros. Cras volutpat ut risus aliquam semper. Vivamus ac eleifend sapien,
+                    sit amet
+                    elementum lacus.
+                </p>
+                <p>
 
-          Curabitur lectus diam, volutpat sit amet turpis in, varius congue nisi. Curabitur accumsan purus in rhoncus
-          placerat. Aenean rhoncus ipsum eget velit rutrum, vel ullamcorper est volutpat. Nulla scelerisque nec lorem
-          sit amet tempor. Nulla fermentum diam felis, feugiat eleifend elit volutpat eget. Quisque blandit velit arcu,
-          vitae maximus enim iaculis non. Fusce egestas elementum blandit.
-        </p>
-      </div>
+                    Curabitur lectus diam, volutpat sit amet turpis in, varius congue nisi. Curabitur accumsan purus in
+                    rhoncus
+                    placerat. Aenean rhoncus ipsum eget velit rutrum, vel ullamcorper est volutpat. Nulla scelerisque
+                    nec lorem
+                    sit amet tempor. Nulla fermentum diam felis, feugiat eleifend elit volutpat eget. Quisque blandit
+                    velit arcu,
+                    vitae maximus enim iaculis non. Fusce egestas elementum blandit.
+                </p>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 
 

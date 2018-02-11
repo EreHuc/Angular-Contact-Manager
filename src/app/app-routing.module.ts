@@ -6,9 +6,9 @@ import { SignupComponent } from './home/signup/signup.component';
 import { VerifyComponent } from './auth/verify/verify.component';
 import { CongratComponent } from './auth/congrat/congrat.component';
 import { NoContentComponent } from './no-content/no-content.component';
-import { ProfileComponent } from './profile/profile.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
-import { LoginComponent } from './auth/login/login.component';
+import { ProfileComponent } from './private/profile/profile.component';
+import { DashboardComponent } from './private/dashboard/dashboard.component';
+import { LoginComponent } from './home/login/login.component';
 
 const routes: Routes = [
 	{path: 'verify/:hash', component: VerifyComponent},

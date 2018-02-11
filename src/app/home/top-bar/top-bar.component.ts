@@ -1,7 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { AppState } from '../../shared/service/app.service';
-import { log } from '../../shared/utils/utils';
 
 @Component({
 	selector: 'top-bar',
@@ -43,7 +42,6 @@ export class TopBarComponent {
 
 	public toggleLeftBar(event) {
 		let icon = event.target;
-		log('toggleLeftBar', 'top-bar.component.ts:45', icon);
 		let innerHtml = icon.innerHTML;
 		if (innerHtml === 'menu') {
 			this.appState.set('leftBar', true);

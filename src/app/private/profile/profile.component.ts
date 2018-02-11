@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AppState } from '../shared/service/app.service';
+import { AppState } from '../../shared/service/app.service';
 
 @Component({
 	selector: 'profile',

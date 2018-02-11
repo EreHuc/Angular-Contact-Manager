@@ -2,8 +2,10 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { AppState } from '../../shared/service/app.service';
 import { DaoService } from '../../shared/service/dao.service';
-import { autoSubmit } from '../../shared/utils/utils';
-import { PushNotificationsService } from 'ng-push';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { SignupValidator } from './signup-validators';
+
+const emailRegexPattern = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 
 @Component({
 	selector: 'signup',
@@ -13,69 +15,52 @@ import { PushNotificationsService } from 'ng-push';
 
 export class SignupComponent {
 	public submit = false;
+	signupForm: FormGroup;
 
-	@ViewChild('spinnerBtn') private el: ElementRef;
-
-	constructor(
-		public appState: AppState,
-		private daoService: DaoService,
-		private notif: PushNotificationsService,
-		private router: Router
-	) {
+	constructor(public appState: AppState,
+				private daoService: DaoService,
+				private router: Router) {
+		this.signupForm = this.buildSignupForm();
 	}
 
-	public signupSubmit(event) {
-		event.preventDefault();
+	public signupSubmit(signupFormValue) {
 		this.submit = true;
-		autoSubmit(event)
-		.then(data => {
-			let newUser = {
-				firstname: data.firstname,
-				lastname: data.lastname,
-				email: data.email,
-				password: data.password
-			};
-			if (data.password !== data.confirm) {
-				// TODO refaire les notifs
-				// this.notif.error(
-				// 	'Error',
-				// 	'Password must be the same'
-				// );
-				let confirmEl = event.target.elements['confirm'];
-				confirmEl.parentElement.classList.add('error', 'focused');
-				this.submit = false;
-			} else {
-				this.daoService.createNewUser(newUser)
-				.then(res => {
+		this.daoService.createNewUser(signupFormValue)
+			.subscribe(
+				() => {
 					this.appState.set('userInfo', {
-						firstname: newUser.firstname,
-						lastname: newUser.lastname,
-						email: newUser.email
+						firstname: signupFormValue.firstname,
+						lastname: signupFormValue.lastname,
+						email: signupFormValue.email
 					});
 					this.router.navigateByUrl('/congrat');
 					this.submit = false;
-				})
-				.catch(err => {
+				},
+				err => {
+					// todo debug error catching
+					debugger;
 					let errorMessage = 'An error occurs, please try again later';
 
 					if (err.message === 'Email already taken') {
 						errorMessage = err.message;
-						event.target.elements['email'].parentElement.classList.add('error', 'focused');
 					}
 					// this.notif.error(
 					// 	'Error',
 					// 	errorMessage
 					// );
 					this.submit = false;
-				});
-			}
-		})
-		.catch(error => {
-			// this.notif.error(
-			// 	'Error',
-			// 	'Please fill out required fields'
-			// );
-			this.submit = false;
+				}
+			);
+	}
+
+	private buildSignupForm(): FormGroup {
+		return new FormGroup({
+			firstname: new FormControl('', Validators.required),
+			lastname: new FormControl('', Validators.required),
+			email: new FormControl('', Validators.compose([Validators.required, Validators.pattern(emailRegexPattern)])),
+			password: new FormControl('', Validators.compose([Validators.required, Validators.minLength(6)])),
+			confirm: new FormControl('', Validators.compose([Validators.required, SignupValidator.confirmPassword])),
+			terms: new FormControl('', Validators.required)
 		});
 	}
 }
