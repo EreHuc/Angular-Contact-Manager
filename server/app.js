@@ -18,7 +18,22 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '../dist')));
 app.use(express.static(path.join(__dirname, '/assets')));
-
+app.use(() => {
+	// redirect HTTPS
+	return function (req, res, next) {
+		if (process.env.NODE_ENV === 'production') {
+			if (req.headers['x-forwarded-proto'] !== 'https') {
+				res.redirect(status, 'https://' + req.hostname + req.originalUrl);
+			}
+			else {
+				next();
+			}
+		}
+		else {
+			next();
+		}
+	};
+})
 app.use((req, res, next) => {
 	res.header('Access-Control-Allow-Origin', '*');
 	res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
