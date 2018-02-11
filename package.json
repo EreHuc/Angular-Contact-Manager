@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "ng build --aot --prod && node ./server/bin/www",
+    "start": "node ./server/bin/www",
     "build": "ng build --aot --prod",
     "test": "ng test",
     "lint": "ng lint",
@@ -14,10 +14,6 @@
     "server:dev": "node ./server/bin/www",
     "server:prod": "NODE_ENV=production node ./server/bin/www",
     "server:debug": "node $NODE_DEBUG_OPTION ./server/bin/www"
-  },
-  "engines": {
-    "node": "6.11.2",
-    "npm": "5.6.0"
   },
   "private": true,
   "dependencies": {
@@ -33,8 +29,6 @@
     "@angular/platform-browser-dynamic": "^5.2.0",
     "@angular/router": "^5.2.0",
     "adminbsb-materialdesign": "^1.0.5",
-    "@angular/cli": "1.6.8",
-    "@angular/compiler-cli": "^5.2.0",
     "bcrypt": "^1.0.3",
     "body-parser": "~1.17.1",
     "bootstrap": "^3.3.7",
@@ -53,8 +47,7 @@
     "nodemailer-smtp-transport": "^2.7.4",
     "rxjs": "^5.5.6",
     "serve-favicon": "~2.4.2",
-    "zone.js": "^0.8.19",
-    "typescript": "~2.5.3"
+    "zone.js": "^0.8.19"
   },
   "devDependencies": {
     "@angular/cli": "1.6.8",
