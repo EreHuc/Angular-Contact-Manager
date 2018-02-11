@@ -3,9 +3,9 @@ const userInfosCrud = require('../crud/user-infos.crud');
 const log = require('../lib/utils').log;
 
 module.exports = function (app) {
-	app.get('/api/*', (req, res, next) => {
+	app.get('/api', (req, res, next) => {
 		log('API', 'api.js:8', 'api called');
-		res.next();
+		next();
 	});
 
 	app.post('/api/users/insert', usersCrud.createUser);
