@@ -51,7 +51,7 @@ db.once('open', () => {
 		error('uncaughtException', 'app.js:49', err);
 	});
 	require('./api/api')(app);
-	app.get('*', (req, res) => {
+	app.get('/*', (req, res) => {
 		res.sendFile(path.join(__dirname, '../dist/index.html'));
 	});
 });
