@@ -4,10 +4,6 @@ const log = require('../lib/utils').log;
 
 module.exports = function (app) {
 	log('API init', 'api.js:6', 'Api initialization...');
-	app.get('/api', (req, res, next) => {
-		log('API', 'api.js:8', 'api called');
-		next();
-	});
 
 	app.post('/api/users/insert', usersCrud.createUser);
 	app.post('/api/users/find', usersCrud.readUsers);
