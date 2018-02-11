@@ -12,6 +12,5 @@ export class ProfileComponent implements OnInit{
 	}
 
 	public ngOnInit() {
-		console.log(this.appState);
 	}
 }

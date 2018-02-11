@@ -12,11 +12,10 @@ import { UserInfo } from '../../user-info';
 import { environment } from '../../../environments/environment';
 
 const API_URL: string = environment.apiUrl;
-console.log('dao.service.ts:15 - ', API_URL);
 @Injectable()
 export class DaoService {
 
-	private _url = `http://${API_URL}/api`;
+	private _url = `/api`;
 
 	constructor(private http: HttpClient) {
 	}
@@ -64,7 +63,7 @@ export class DaoService {
 	}
 
 	private handleError(error: any): Observable<any> {
-		console.log('dao.service.ts:66 - ', error);
+		console.error(error);
 		return Observable.throw(error.error || 'Server Error');
 	}
 }
