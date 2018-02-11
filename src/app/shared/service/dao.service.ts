@@ -9,14 +9,14 @@ import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/observable/throw';
 import { HttpClient } from '@angular/common/http';
 import { UserInfo } from '../../user-info';
+import { environment } from '../../../environments/environment';
 
-const API_URL: string = '127.0.0.1';
-const API_PORT: string = '3000';
+const API_URL: string = environment.production ? 'angular-contact-manager.herokuapp.com' : '127.0.0.1:3000';
 
 @Injectable()
 export class DaoService {
 
-	private _url = `http://${API_URL}:${API_PORT}/api`;
+	private _url = `http://${API_URL}/api`;
 
 	constructor(private http: HttpClient) {
 	}
