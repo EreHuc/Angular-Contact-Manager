@@ -81,11 +81,5 @@ function onError(error) {
  */
 
 function onListening() {
-  var addr = server.address();
-  var bind = typeof addr === 'string'
-    ? 'pipe ' + addr
-    : 'port ' + addr.port;
-  debug('Listening on ' + bind);
-  process.env.host = addr.address;
-  process.env.port = addr.port;
+   console.log(`Listening on ${process.env.HOST}:${process.env.PORT}`);
 }
