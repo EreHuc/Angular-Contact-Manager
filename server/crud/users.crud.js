@@ -26,6 +26,7 @@ const updateManyUsers = (query, update) => new Promise((resolve, reject) => {
 });
 
 const createUser = (req, res, next) => {
+	log('CREATE USER START', 'users.crud.js:29', 'createUser called');
 	const userObj = {
 		username: req.body.email,
 		password: req.body.password,
@@ -41,6 +42,7 @@ const createUser = (req, res, next) => {
 	};
 	findUsers({username: userObj.email})
 		.then((data) => {
+			log('CREATE USER START', 'users.crud.js:29', 'findUser Done');
 			if (data.length) {
 				res.send(400, 'Email already taken');
 			} else {
@@ -89,8 +91,8 @@ const createUser = (req, res, next) => {
 			}
 		})
 		.catch((err) => {
-			res.send(500, err.message);
 			error('findUsers', 'users.crud.js:99', err);
+			res.send(500, err.message);
 		});
 };
 
