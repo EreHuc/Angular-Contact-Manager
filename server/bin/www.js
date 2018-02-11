@@ -5,14 +5,15 @@
 const app = require('../app');
 const debug = require('debug')('server:server');
 const fs = require('fs');
-const key = fs.readFileSync('../encryption/privatekey.pem');
-const cert = fs.readFileSync('../encryption/certificate.pem');
+const path = require('path');
+const key = fs.readFileSync(path.join(__dirname, '../encryption/key.pem'), 'utf8');
+const cert = fs.readFileSync(path.join(__dirname, '../encryption/server.crt'), 'utf8');
 const https = require('https');
+const http = require('http');
 const options = {
 	key,
 	cert
 };
-
 /**
  * Get port from environment and store in Express.
  */
@@ -31,6 +32,7 @@ var server = https.createServer(options, app);
  */
 
 server.listen(port);
+http.createServer(app).listen(8080);
 
 /**
  * Normalize a port into a number, string, or false.
