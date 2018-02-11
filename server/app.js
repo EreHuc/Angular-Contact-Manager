@@ -11,6 +11,8 @@ const log = require('./lib/utils').log;
 
 const app = express();
 
+const mongoUri = process.env.NODE_ENV === 'production' ? process.env.MONGODB_URI : 'mongodb://localhost:27017';
+
 // uncomment after placing your favicon in /public
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -30,8 +32,7 @@ app.use((err, req, res, next) => {
 	console.log(err);
 	next();
 });
-
-mongoose.connect('mongodb://localhost:27017/test');
+mongoose.connect(`${mongoUri}/test`);
 const db = mongoose.connection;
 mongoose.Promise = global.Promise;
 db.on('error', () => {
