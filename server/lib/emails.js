@@ -1,9 +1,12 @@
 const nodemailer = require('nodemailer');
 const smtpTransport = require('nodemailer-smtp-transport');
 const utils = require('./utils');
-const mySuperSecret = require('../../key')[0];
 const fs = require('fs');
 const path = require('path');
+
+if (process.env.NODE_ENV !== 'production') {
+	const mySuperSecret = require('../../key')[0];
+}
 
 let transporter;
 if (process.env.NODE_ENV === 'production') {
@@ -39,7 +42,10 @@ const verificationEmail = (user, url) => ({
 
 const sendVerificationMail = (user) => {
 	const hash = utils.hash(32);
-	const url = `http://${process.env.host}:${process.env.NODE_ENV === 'production' ? 3000 : 4200}/verify/${hash}`;
+	let url = `http://${process.env.host}:4200}/verify/${hash}`;
+	if (process.env.NODE_ENV === 'production') {
+	  url = `http://${process.env.APPURL}/verify/${hash}`;
+	}
 	const mailOptions = verificationEmail(user, url);
 	return new Promise((resolve, reject) => {
 		transporter.sendMail(mailOptions, (error, info) => {
