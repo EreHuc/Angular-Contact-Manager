@@ -30,6 +30,8 @@
     "@angular/platform-browser-dynamic": "^5.2.0",
     "@angular/router": "^5.2.0",
     "adminbsb-materialdesign": "^1.0.5",
+    "@angular/cli": "1.6.8",
+    "@angular/compiler-cli": "^5.2.0",
     "bcrypt": "^1.0.3",
     "body-parser": "~1.17.1",
     "bootstrap": "^3.3.7",
