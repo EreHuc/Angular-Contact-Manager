@@ -5,8 +5,8 @@
 const app = require('../app');
 const debug = require('debug')('server:server');
 const fs = require('fs');
-const key = fs.readFileSync('../encryption/private.key');
-const cert = fs.readFileSync('../encryption/primary.crt');
+const key = fs.readFileSync('../encryption/privatekey.pem');
+const cert = fs.readFileSync('../encryption/certificate.pem');
 const https = require('https');
 const options = {
 	key,
