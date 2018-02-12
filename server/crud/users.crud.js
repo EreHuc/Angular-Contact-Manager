@@ -39,14 +39,14 @@ const createUser = (req, res, next) => {
 		createdAt: new Date(),
 		profilePicture: `http://${process.env.host}:${process.env.port}/people.png`,
 	};
-	findUsers({username: userObj.email})
+	findUsers({username: userInfoObj.email})
 		.then((data) => {
 			if (data.length) {
 				res.send(400, 'Email already taken');
 			} else {
 				bcrypt.hash(userObj.password, 10, (err, hash) => {
 					if (err) {
-						res.send(500, err.message);
+						res.status(500).send(err.message);
 						error('createUser', 'users.crud.js:57', err);
 					}
 					userObj.password = hash;
@@ -227,7 +227,7 @@ const setUsername = (req, res, next) => {
 		findUsers({username})
 			.then((users) => {
 				if (users.length) {
-					res.send(400, 'username already taken');
+					res.send(400, 'Username already taken');
 				} else {
 					updateManyUsers({_id: userId}, {$set: {username, verified: true}, $unset: {token: {}}})
 						.then((data) => {

@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DaoService } from '../../shared/service/dao.service';
 import { AppState } from '../../shared/service/app.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material';
 
 // import { NotificationsService } from 'angular2-notifications/dist';
 
@@ -24,7 +25,7 @@ export class VerifyComponent implements OnInit {
 				private daoService: DaoService,
 				private route: ActivatedRoute,
 				private router: Router,
-				// private notify: NotificationsService
+				private snackBar: MatSnackBar
 	) {
 		this.verifyForm = this.buildForm();
 	}
@@ -58,6 +59,14 @@ export class VerifyComponent implements OnInit {
 				}, err => {
 					//todo notification ici
 					console.error(err);
+					let errorMessage = 'An error occurs, please try again later';
+
+					if (err.error === 'Username already taken') {
+						errorMessage = err.error;
+					}
+					this.snackBar.open(errorMessage, '', {
+						duration: 2000,
+					});
 					this.submit = false;
 				});
 		}

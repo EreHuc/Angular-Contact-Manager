@@ -44,7 +44,6 @@ db.once('open', () => {
 	process.on('uncaughtException', (err) => {
 		error('uncaughtException', 'app.js:49', err);
 	});
-	console.log('app.js:47 - ', process.env);
 	require('./api/api')(app);
 	if (process.env.NODE_ENV === 'production') {
 		app.get('/*', (req, res) => {

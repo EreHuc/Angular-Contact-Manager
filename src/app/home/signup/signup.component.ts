@@ -4,6 +4,7 @@ import { AppState } from '../../shared/service/app.service';
 import { DaoService } from '../../shared/service/dao.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { SignupValidator } from './signup-validators';
+import { MatSnackBar } from '@angular/material';
 
 const emailRegexPattern = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 
@@ -19,7 +20,8 @@ export class SignupComponent {
 
 	constructor(public appState: AppState,
 				private daoService: DaoService,
-				private router: Router) {
+				private router: Router,
+				private snackBar: MatSnackBar) {
 		this.signupForm = this.buildSignupForm();
 	}
 
@@ -37,17 +39,14 @@ export class SignupComponent {
 					this.submit = false;
 				},
 				err => {
-					// todo debug error catching
-					debugger;
 					let errorMessage = 'An error occurs, please try again later';
 
-					if (err.message === 'Email already taken') {
-						errorMessage = err.message;
+					if (err.error === 'Email already taken') {
+						errorMessage = err.error;
 					}
-					// this.notif.error(
-					// 	'Error',
-					// 	errorMessage
-					// );
+					this.snackBar.open(errorMessage, '', {
+						duration: 2000,
+					});
 					this.submit = false;
 				}
 			);

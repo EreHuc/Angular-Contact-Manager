@@ -13,6 +13,7 @@ export class LeftBarComponent implements OnInit {
 	@ViewChild('sidebar') public sidebar: ElementRef;
 
 	constructor(public appState: AppState) {
+		console.log('left-bar.component.ts:16 - ', appState.state);
 	}
 
 	public ngOnInit() {}

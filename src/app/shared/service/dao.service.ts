@@ -64,6 +64,6 @@ export class DaoService {
 
 	private handleError(error: any): Observable<any> {
 		console.error(error);
-		return Observable.throw(error.error || 'Server Error');
+		return Observable.throw(error || 'Server Error');
 	}
 }
