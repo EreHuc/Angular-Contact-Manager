@@ -1,14 +1,7 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import 'rxjs/add/operator/startWith';
-import 'rxjs/add/observable/merge';
-import 'rxjs/add/operator/map';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { AppState } from '../../shared/service/app.service';
 import { DaoService } from '../../shared/service/dao.service';
-import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
-import { UserInfo } from '../../user-info';
-import { merge } from 'rxjs/observable/merge';
-import { catchError, map, startWith, switchMap } from 'rxjs/operators';
-import { of } from 'rxjs/observable/of';
+import { USERS } from './mock-users';
 
 @Component({
 	selector: 'dashboard',
@@ -17,20 +10,41 @@ import { of } from 'rxjs/observable/of';
 })
 
 export class DashboardComponent implements OnInit, AfterViewInit {
-	public displayedColumns = ['profilePicture', 'firstname', 'lastname', 'email'];
-	public dataSource: MatTableDataSource<UserInfo>;
-	public resultsLength = 0;
-	public isLoadingResults = true;
-	public isRateLimitReached = false;
+	public users = USERS;
 
-	@ViewChild(MatPaginator) paginator: MatPaginator;
-	@ViewChild(MatSort) sort: MatSort;
 	constructor(public appState: AppState, private daoService: DaoService) {
-		this.dataSource = new MatTableDataSource<UserInfo>();
+
 	}
 
 	public ngOnInit() {
-		this.dataSource.sort = this.sort;
+
+	}
+
+	public ngAfterViewInit() {
+
+	}
+}
+/*
+import 'rxjs/add/operator/startWith';
+import 'rxjs/add/observable/merge';
+import 'rxjs/add/operator/map';
+import { merge } from 'rxjs/observable/merge';
+import { catchError, map, startWith, switchMap } from 'rxjs/operators';
+import { of } from 'rxjs/observable/of';
+import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
+import { UserInfo } from '../../user-info';
+
+public displayedColumns = ['profilePicture', 'firstname', 'lastname', 'email'];
+public dataSource: MatTableDataSource<UserInfo>;
+public resultsLength = 0;
+public isLoadingResults = true;
+public isRateLimitReached = false;
+@ViewChild(MatPaginator) paginator: MatPaginator;
+@ViewChild(MatSort) sort: MatSort;
+
+this.dataSource = new MatTableDataSource<UserInfo>();
+
+this.dataSource.sort = this.sort;
 		merge(this.paginator.page)
 			.pipe(
 				startWith({}),
@@ -53,9 +67,4 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 					return of([]);
 				})
 			).subscribe((userInfo: UserInfo[]) => this.dataSource.data = userInfo);
-	}
-
-	public ngAfterViewInit() {
-
-	}
-}
+ */

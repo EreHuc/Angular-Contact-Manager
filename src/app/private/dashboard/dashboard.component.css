@@ -1,75 +1,105 @@
 .full-height {
-  height: calc(100vh - 100px);
-  position: relative;
-  width: 100%;
-  padding: 010px;
+    height: calc(100vh - 100px);
+    position: relative;
+    width: 100%;
+    padding: 010px;
 }
 
 @media (min-width: 767px) {
-  .height-1 {
-    height: 120px;
-  }
+    .height-1 {
+        height: 120px;
+    }
 
-  .height-2 {
-    height: calc(100% - 120px);
-  }
+    .height-2 {
+        height: calc(100% - 120px);
+    }
 }
 
 /* Structure */
 .example-container {
-  display: flex;
-  flex-direction: column;
-  max-height: 500px;
-  min-width: 300px;
-  position: relative;
+    display: flex;
+    flex-direction: column;
+    max-height: 500px;
+    min-width: 300px;
+    position: relative;
 }
 
 .example-header {
-  min-height: 64px;
-  display: flex;
-  align-items: center;
-  padding-left: 24px;
-  font-size: 20px;
+    min-height: 64px;
+    display: flex;
+    align-items: center;
+    padding-left: 24px;
+    font-size: 20px;
 }
 
 .example-table {
-  overflow: auto;
-  min-height: 300px;
+    overflow: auto;
+    min-height: 300px;
 }
 
 .example-loading-shade {
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 56px;
-  right: 0;
-  background: rgba(0, 0, 0, 0.15);
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 56px;
+    right: 0;
+    background: rgba(0, 0, 0, 0.15);
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .example-rate-limit-reached {
-  color: #980000;
-  max-width: 360px;
-  text-align: center;
+    color: #980000;
+    max-width: 360px;
+    text-align: center;
 }
 
 /* Column Widths */
 .mat-column-number,
 .mat-column-state {
-  max-width: 64px;
+    max-width: 64px;
 }
 
 .mat-column-created {
-  max-width: 124px;
+    max-width: 124px;
 }
 
 .mat-cell {
-  padding: 5px 0;
+    padding: 5px 0;
 }
 
 .mat-row:hover {
-  background: #ccc;
+    background: #ccc;
 }
+
+.parent {
+    display: flex;
+    align-items: center;
+}
+
+.contact-card {
+    width: 100%;
+    margin: 5px;
+}
+
+.mat-divider {
+    margin: 10px 0;
+}
+
+.mat-card {
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    cursor: pointer;
+    background-color: #d2d2d2;
+    -webkit-box-shadow: inset 0 0 0 transparent!important;
+    -moz-box-shadow: inset 0 0 0 transparent!important;
+    box-shadow: inset 0 0 0 transparent!important;
+}
+
+.material-icons {
+    margin: 97px!important;
+}
+

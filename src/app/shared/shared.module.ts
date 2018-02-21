@@ -11,10 +11,16 @@ import { UtilsService } from './service/utils.service';
 
 import { LoadingComponent } from './loading/loading.component';
 import { SpinnerBtnComponent } from './spiner-btn/spinner-btn.component';
+import { ContactCardComponent } from './contact-card/contact-card.component';
+import { MatCardModule, MatDividerModule, MatListModule } from '@angular/material';
+import { NaPipe } from './pipe/na.pipe';
 
 @NgModule({
 	imports: [
-		CommonModule
+		CommonModule,
+		MatCardModule,
+		MatDividerModule,
+		MatListModule
 	],
 	declarations: [
 		FocusedDirective,
@@ -22,7 +28,9 @@ import { SpinnerBtnComponent } from './spiner-btn/spinner-btn.component';
 		WaveDirective,
 		WaveRippleDirective,
 		LoadingComponent,
-		SpinnerBtnComponent
+		SpinnerBtnComponent,
+		ContactCardComponent,
+		NaPipe
 	],
 	providers: [
 		AppState,
@@ -35,7 +43,8 @@ import { SpinnerBtnComponent } from './spiner-btn/spinner-btn.component';
 		WaveDirective,
 		WaveRippleDirective,
 		LoadingComponent,
-		SpinnerBtnComponent
+		SpinnerBtnComponent,
+		ContactCardComponent
 	]
 })
 

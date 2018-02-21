@@ -8,9 +8,9 @@
                 </h5>
                 <form [formGroup]="loginForm" id="sign_in" novalidate>
                     <div class="input-group">
-            <span class="input-group-addon">
-                <i class="material-icons">person</i>
-            </span>
+                        <span class="input-group-addon">
+                            <i class="material-icons">person</i>
+                        </span>
                         <div class="form-line" [class.error]="loginForm.controls.username.invalid">
                             <input type="text" class="form-control" formControlName="username" placeholder="Username *"
                                    autofocus
@@ -18,9 +18,9 @@
                         </div>
                     </div>
                     <div class="input-group">
-            <span class="input-group-addon">
-                <i class="material-icons">lock</i>
-            </span>
+                        <span class="input-group-addon">
+                            <i class="material-icons">lock</i>
+                        </span>
                         <div class="form-line" [class.error]="loginForm.controls.password.invalid">
                             <input type="password" class="form-control" formControlName="password"
                                    placeholder="Password *" focusedInput>

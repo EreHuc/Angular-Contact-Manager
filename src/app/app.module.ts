@@ -14,7 +14,7 @@ import { HomeModule } from './home/home.module';
 import { AuthModule } from './auth/auth.module';
 import { PrivateModule } from './private/private.module';
 import { SharedModule } from './shared/shared.module';
-import { MatSnackBarModule } from '@angular/material';
+import { MatInputModule, MatSnackBarModule } from '@angular/material';
 
 @NgModule({
 	declarations: [
@@ -30,7 +30,8 @@ import { MatSnackBarModule } from '@angular/material';
 		HttpClientModule,
 		SharedModule,
 		PrivateModule,
-		MatSnackBarModule
+		MatSnackBarModule,
+		MatInputModule
 	],
 	providers: [HttpClient, CookieService],
 	bootstrap: [AppComponent]

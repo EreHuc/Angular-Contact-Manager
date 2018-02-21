@@ -62,6 +62,10 @@ export class DaoService {
 			.catch(this.handleError);
 	}
 
+	public generateFakeData() {
+		return this.http.get(`${this._url}/mock-user-infos`);
+	}
+
 	private handleError(error: any): Observable<any> {
 		console.error(error);
 		return Observable.throw(error || 'Server Error');
