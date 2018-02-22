@@ -6,13 +6,22 @@ const emails = require('../lib/emails');
 const userInfosCrud = require('./user-infos.crud');
 const { log, error } = require('../lib/utils');
 
+const defaultPictureProfile = `http://${process.env.host}:${process.env.port}/people.png`;
+
 // CRUD : CREATE READ UPDATE DELETE
 
 const findUsers = (query = {}, projection = {}, options = {}) => new Promise((resolve, reject) => {
-  User.find(query, projection, options).select({ password: 0, __v: 0 }).exec((err, data) => {
-    if (err) reject(new Error(err));
-    resolve(data);
-  });
+	User.find(query, projection, options).select({password: 0, __v: 0}).exec((err, data) => {
+		if (err) reject(new Error(err));
+		resolve(data);
+	});
+});
+
+const findOneUser = (query) => new Promise((resolve, reject) => {
+	User.findOne(query).select({__v: 0, token: 0}).exec((err, data) => {
+		if (err) reject(err);
+		resolve(data);
+	})
 });
 
 const updateManyUsers = (query, update) => new Promise((resolve, reject) => {
@@ -24,232 +33,258 @@ const updateManyUsers = (query, update) => new Promise((resolve, reject) => {
   });
 });
 
-const createUser = (req, res) => {
-  const userObj = {
-    username: req.body.email,
-    password: req.body.password,
-    verified: false,
-    createdAt: new Date(),
-  };
-  const userInfoObj = {
-    firstname: req.body.firstname,
-    lastname: req.body.lastname,
-    email: req.body.email,
-    createdAt: new Date(),
-    profilePicture: `http://${process.env.host}:${process.env.port}/people.png`,
-  };
-  findUsers({ username: userInfoObj.email })
-    .then((data) => {
-      if (data.length) {
-        res.send(400, 'Email already taken');
-      } else {
-        bcrypt.hash(userObj.password, 10, (err, hash) => {
-          if (err) {
-            res.status(500).send(err.message);
-            error('createUser', 'users.crud.js:57', err);
-          }
-          userObj.password = hash;
-          const currentUser = new User(userObj);
-          currentUser.save((errUserSave, user) => {
-            if (errUserSave) {
-              res.send(500, errUserSave.message);
-              error('createUser', 'users.crud.js:64', errUserSave);
-            }
-            userInfoObj.userId = user._id;
-            const currentUserInfo = new UserInfo(userInfoObj);
-            currentUserInfo.save((errUserInfoSave, userInfo) => {
-              if (errUserInfoSave) {
-                res.send(500, errUserInfoSave.message);
-                error('createUser', 'users.crud.js:71', errUserInfoSave);
-              }
-              const userDetail = {
-                email: userInfo.email,
-                firstname: userInfo.firstname,
-                lastname: userInfo.lastname,
-              };
-              emails.sendVerificationMail(userDetail)
-                .then((token) => {
-                  updateManyUsers({ _id: user._id }, { $set: { token: { verify: token.hash } } })
-                    .then(() => {
-                      res.send(user._id);
-                    })
-                    .catch((errUpdateUsersToken) => {
-                      res.send(500, errUpdateUsersToken.message);
-                      error('findUsers', 'users.crud.js:86', errUpdateUsersToken);
-                    });
-                })
-                .catch((errVerfiMail) => {
-                  res.send(500, errVerfiMail.message);
-                  error('findUsers', 'users.crud.js:91', errVerfiMail);
-                });
-            });
-          });
-        });
-      }
-    })
-    .catch((err) => {
-      res.send(500, err.message);
-      error('findUsers', 'users.crud.js:99', err);
-    });
+const createUserObject = (username, password, createdAt = new Date(), verified = false) => {
+	return freezeObject({username, password, createdAt, verified});
 };
 
-const readUsers = (req, res) => {
-  const query = utils.parseJson(req.body.query);
-  const projection = utils.parseJson(req.body.projection) || {};
-  const options = utils.parseJson(req.body.options) || {};
-  findUsers(query, projection, options)
-    .then((data) => {
-      res.send(data);
-    })
-    .catch((err) => {
-      error('readUsers', 'users.crud.js:114', err);
-      res.send(500, err.message);
-    });
+const createUserInfoObject = (firstname, lastname, email, createdAt = new Date(), profilePicture = defaultPictureProfile) => {
+	return freezeObject({firstname, lastname, email, createdAt, profilePicture});
 };
 
-const updateUsers = (req, res) => {
-  const { query, update } = req.body;
-  updateManyUsers(query, update)
-    .then((data) => {
-      res.send(data);
-    })
-    .catch((err) => {
-      res.send(500, err.message);
-      error('updateUsers', 'users.crud.js:128', err);
-    });
+// TODO move 4 next func to utils.js
+
+const throwError = (res, err, status = 500) => {
+	res.status(status).send(err);
 };
 
-const deleteUsers = (req, res) => {
-  const { query } = req.body;
-  const projection = req.body.projection || {};
-  const options = req.query.options || {};
-  if (!query || typeof query !== 'object' || (Object.keys(query).length <= 1 && !query._id)) {
-    res.send(500, 'Invalid auery');
-  } else {
-    findUsers(query, projection, options)
-      .then((users) => {
-        users.forEach((user) => {
-          UserInfo.deleteOne({ userId: user._id }, (err) => {
-            if (err) {
-              res.send(500, err.message);
-              error('deleteUsers', 'users.crud.js:142', err);
-            }
-            User.deleteOne({ _id: user._id }, (errDeleteUser) => {
-              if (errDeleteUser) {
-                res.send(500, errDeleteUser.message);
-                error('deleteUsers', 'users.crud.js:147', errDeleteUser);
-              }
-            });
-          });
-        });
-        res.send(200);
-      })
-      .catch((err) => {
-        res.send(500, err.message);
-        error('deleteUser', 'users.crud.js:157', err);
-      });
-  }
+const sendData = (res, data) => {
+	res.send(data);
 };
 
-const loginUser = (req, res) => {
-  const query = utils.parseJson(req.body.query);
-  const password = utils.parseJson(req.body.password).toString();
-  User.findOne(query, { __v: 0, token: 0 }, (err, user) => {
-    if (err) {
-      res.send(500, err.message);
-      error('loginUser', 'users.crud.js:166', err);
-    } else {
-      log('', 'users.crud.js:168', typeof password);
-      if (user && user.verified) {
-        bcrypt.compare(password, user.password, (errBCrypt, data) => {
-          if (errBCrypt) {
-            res.send(500, errBCrypt.message);
-            error('loginUser', 'users.crud.js:171', errBCrypt);
-          } else if (data) {
-            let currentUser = {};
-            currentUser = Object.assign(currentUser, user.toObject());
-            delete currentUser.password;
-            userInfosCrud.findUserInfos({ userId: user._id })
-              .then((userInfos) => {
-                currentUser.userInfos = userInfos.length ? userInfos[0] : null;
-                res.send(currentUser);
-              })
-              .catch((errFindUserInfos) => {
-                res.send(500, errFindUserInfos.message);
-                error('loginUser', 'users.crud.js:183', errFindUserInfos);
-              });
-          } else {
-            res.send(400, 'Invalid password');
-          }
-        });
-      } else {
-        res.send(400, 'Account verification is required');
-      }
-    }
-  });
+const createMongooseObject = (model) => {
+	return (data) => {
+		return new model(data);
+	};
 };
 
-const verifyUser = (req, res) => {
-  const query = utils.parseJson(req.body.query);
-  findUsers(query)
-    .then((users) => {
-      if (users.length) {
-        let user = {};
-        user = Object.assign(user, users[0].toObject());
-        userInfosCrud.findUserInfos({ userId: user._id }, { _id: 0, createdAt: 0, userId: 0 })
-          .then((userInfos) => {
-            user.userInfos = userInfos.length ? userInfos[0] : null;
-            res.send(user);
-          })
-          .catch((err) => {
-            res.send(500, err);
-            error('verifyUser', 'users.crud.js:210', err);
-          });
-      } else {
-        res.status(400).send('No such user');
-      }
-    })
-    .catch((err) => {
-      res.send(500, err);
-      error('verifyUser', 'users.crud.js:199', err);
-    });
+const freezeObject = (object) => {
+	return Object.freeze(object);
 };
 
-const setUsername = (req, res) => {
-  const username = utils.parseJson(req.body.username);
-  const userId = utils.parseJson(req.body.userId);
-  if (username) {
-    if (username.length < 4) {
-      // TODO verify username length
-    }
-    findUsers({ username })
-      .then((users) => {
-        if (users.length) {
-          res.send(400, 'Username already taken');
-        } else {
-          updateManyUsers(
-            { _id: userId },
-            {
-              $set: { username, verified: true },
-              $unset: { token: {} },
-            }
-          )
-            .then(() => {
-              res.send(username);
-            })
-            .catch((err) => {
-              res.send(500, err);
-              error('setusername', 'users.crud.js:237', err);
-            });
-        }
-      })
-      .catch((err) => {
-        res.send(500, err);
-        error('setUsername', 'users.crud.js:238', err);
-      });
-  } else {
-    res.send(400, 'username is required');
-  }
+// TODO move 2 next func into user.collection.js and user-info.collection.js respectively
+
+const createMongooseUserObject = createMongooseObject(User);
+
+const createMongooseUserInfoObject = createMongooseObject(UserInfo);
+
+const throwEmailTakenError = (res) => {
+	return throwError(res, 'Email already taken', 400);
+};
+
+const createUserObjectWithHashedPassword = (userObject, password) => {
+	return freezeObject({...userObject, password});
+};
+
+const createUserInfoObjectWithUserId = (userInfoObject, userId) => {
+	return freezeObject({...userInfoObject, userId});
+};
+
+const createMailUserDetail = (firstname, lastname, email) => {
+	return freezeObject({firstname, lastname, email});
+};
+
+const createLoggedUser = (loggedUser, infoUser) => {
+	const userInfos = infoUser.length ? infoUser[0] : null;
+	return freezeObject({... loggedUser, userInfos});
+};
+
+const createUser = (req, res, next) => {
+	const userObj = createUserObject(req.body.email, req.body.password);
+	const userInfoObj = createUserInfoObject(req.body.firstname, req.body.lastname, req.body.email);
+	findUsers({username: userInfoObj.email})
+		.then((data) => {
+			if (data.length) {
+				throwEmailTakenError(res);
+			} else {
+				bcrypt.hash(userObj.password, 10, (err, hash) => {
+					if (err) {
+						throwError(res, err.message);
+						error('createUser', 'users.crud.js:57', err);
+					}
+					const currentUser = createMongooseUserObject(createUserObjectWithHashedPassword(userObj, hash));
+					currentUser.save((err, user) => {
+						if (err) {
+							throwError(res, err.message);
+							error('createUser', 'users.crud.js:64', err);
+						}
+						const currentUserInfo = createMongooseUserInfoObject(createUserInfoObjectWithUserId(userInfoObj, user._id));
+						currentUserInfo.save((err, userInfo) => {
+							if (err) {
+								throwError(res, err.message);
+								error('createUser', 'users.crud.js:71', err);
+							}
+							const userDetail = createMailUserDetail(userInfo.firstname, userInfo.lastname, userInfo.email);
+							emails.sendVerificationMail(userDetail)
+								.then((data) => {
+									updateManyUsers({_id: user._id}, {$set: {token: {verify: data.hash}}})
+										.then((data) => {
+											sendData(res, data);
+										})
+										.catch((err) => {
+											throwError(res, err.message);
+											error('findUsers', 'users.crud.js:86', err);
+										});
+								})
+								.catch((err) => {
+									throwError(res, err.message);
+									error('findUsers', 'users.crud.js:91', err);
+								});
+						});
+					});
+				});
+			}
+		})
+		.catch((err) => {
+			throwError(res, err.message);
+			error('findUsers', 'users.crud.js:99', err);
+		});
+};
+
+const readUsers = (req, res, next) => {
+	const query = utils.parseJson(req.body.query);
+	const projection = utils.parseJson(req.body.projection) || {};
+	const options = utils.parseJson(req.body.options) || {};
+	findUsers(query, projection, options)
+		.then((data) => {
+			sendData(res, data);
+		})
+		.catch((err) => {
+			error('readUsers', 'users.crud.js:114', err);
+			throwError(res, err.message);
+		});
+};
+
+const updateUsers = (req, res, next) => {
+	const query = utils.parseJson(req.body.query);
+	const update = utils.parseJson(req.body.update);
+	updateManyUsers(query, update)
+		.then((data) => {
+			sendData(res, data);
+		})
+		.catch((err) => {
+			throwError(res, err.message);
+			error('updateUsers', 'users.crud.js:128', err);
+		});
+};
+
+const deleteUsers = (req, res, next) => {
+	const query = utils.parseJson(req.body.query);
+	const projection = utils.parseJson(req.body.projection) || {};
+	const options = utils.parseJson(req.query.options) || {};
+	if (!query || typeof query !== 'object' || (Object.keys(query).length <= 1 && !query._id)) {
+		throwError(res, 'Invalid query');
+	} else {
+		findUsers(query, projection, options)
+			.then((users) => {
+				users.forEach((user) => {
+					UserInfo.deleteOne({userId: user._id}, (err, data) => {
+						if (err) {
+							throwError(res, err.message);
+							error('deleteUsers', 'users.crud.js:142', err);
+						}
+						User.deleteOne({_id: user._id}, (err, data) => {
+							if (err) {
+								throwError(res, err.message);
+								error('deleteUsers', 'users.crud.js:147', err);
+							}
+						});
+					});
+				});
+				sendData(200);
+			})
+			.catch((err) => {
+				throwError(res, err.message);
+				error('deleteUser', 'users.crud.js:157', err);
+			});
+	}
+};
+
+const loginUser = (req, res, next) => {
+	const query = utils.parseJson(req.body.query);
+	const password = utils.parseJson(req.body.password).toString();
+	findOneUser(query)
+		.then((user) => {
+			if (user && user.verified) {
+				bcrypt.compare(password, user.password, (err, data) => {
+					if (err) {
+						throwError(res, err.message);
+						error('loginUser', 'users.crud.js:171', err);
+					} else if (data) {
+						userInfosCrud.findUserInfos({userId: user._id})
+							.then((userInfos) => {
+								sendData(res, createLoggedUser(user.toObject(), userInfos));
+							})
+							.catch((err) => {
+								throwError(res, err.message);
+								error('loginUser', 'users.crud.js:183', err);
+							});
+					} else {
+						throwError(res, 'Invalid password', 400);
+					}
+				});
+			} else {
+				throwError(res, 'Account verification is required', 400);
+			}
+		})
+		.catch((err) => {
+			throwError(res, err);
+			error('loginUser', 'users.crud.js:166', err);
+		});
+};
+
+const verifyUser = (req, res, next) => {
+	const query = utils.parseJson(req.body.query);
+	// TODO: URGENT TEST
+	findOneUser(query)
+		.then((user) => {
+			if (user) {
+				userInfosCrud.findUserInfos({userId: user._id}, {_id: 0, createdAt: 0, userId: 0})
+					.then((userInfos) => {
+						sendData(res, createLoggedUser(user, userInfos))
+					})
+					.catch((err) => {
+						throwError(res, err.message);
+						error('verifyUser', 'users.crud.js:210', err);
+					});
+			} else {
+				throwError(res, 'No such user', 400);
+			}
+		})
+		.catch((err) => {
+			throwError(res, err.message);
+			error('verifyUser', 'users.crud.js:199', err);
+		});
+};
+
+const setUsername = (req, res, next) => {
+	const username = utils.parseJson(req.body.username);
+	const userId = utils.parseJson(req.body.userId);
+	if (username) {
+		if (username.length < 4) {
+
+		}
+		findUsers({username})
+			.then((users) => {
+				if (users.length) {
+					throwError(res, 'Username already taken', 400);
+				} else {
+					updateManyUsers({_id: userId}, {$set: {username, verified: true}, $unset: {token: {}}})
+						.then(() => {
+							sendData(res, { username });
+						})
+						.catch((err) => {
+							throwError(res, err.message);
+							error('setUsername', 'users.crud.js:237', err);
+						});
+				}
+			})
+			.catch((err) => {
+				throwError(res, err.message);
+				error('setUsername', 'users.crud.js:238', err);
+			});
+	} else {
+		throwError(res, 'Username is required', 400);
+	}
 };
 
 const getContactList = (req, res) => {

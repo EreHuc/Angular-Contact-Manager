@@ -11,6 +11,12 @@ const UsersSchema = new mongoose.Schema({
   contactIds: [String]
 });
 
+UsersSchema.options.toObject.transform = function (doc, ret) {
+	// TODO: TEST THIS !!!!
+	delete ret.password;
+	return ret;
+};
+
 const User = mongoose.model('users', UsersSchema);
 
 module.exports = User;
