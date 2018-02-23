@@ -2,7 +2,7 @@ export interface UserInfo {
     _id?: string | null;
     firstname: string,
     lastname: string,
-    birthday?: Date | null,
+    birthdate?: Date | null,
     sexe?: string | null,
     address?: string | null,
     profilePicture: string,

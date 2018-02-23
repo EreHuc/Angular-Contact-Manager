@@ -24,7 +24,7 @@
         </mat-form-field>
         <mat-form-field>
             <input matInput formControlName="address" placeholder="Address" ngx-google-places-autocomplete
-                   #placesRef="ngx-places">
+                   #placesRef="ngx-places" (onAddressChange)="handleAddressChange($event)">
         </mat-form-field>
         <mat-form-field>
             <input matInput [matDatepicker]="picker" placeholder="Birthdate" formControlName="birthdate">

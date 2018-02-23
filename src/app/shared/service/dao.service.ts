@@ -8,8 +8,9 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/observable/throw';
 import { HttpClient } from '@angular/common/http';
-import { UserInfo } from '../../user-info';
+import { UserInfo } from '../user-info';
 import { environment } from '../../../environments/environment';
+import { User } from '../user';
 
 const API_URL: string = environment.apiUrl;
 
@@ -21,52 +22,52 @@ export class DaoService {
     constructor(private http: HttpClient) {
     }
 
-    public createNewUser(user: any): Observable<any> {
+    public createNewUser(user: any): Observable<UserInfo> {
         return this.http
             .post(`${this._url}/users/insert`, user)
-            .map(res => res)
+            .map((res: UserInfo): UserInfo => res)
             .catch(this.handleError);
     }
 
-    public verifyUser(hash: string): Observable<any> {
+    public verifyUser(hash: string): Observable<User> {
         return this.http
             .put(`${this._url}/users/verify`, {query: {'token.verify': hash}})
-            .map(res => res)
+            .map((res: User): User => res)
             .catch(this.handleError);
     }
 
-    public loginUser(username: string, password: string): Observable<any> {
+    public loginUser(username: string, password: string): Observable<User> {
         return this.http
             .post(`${this._url}/users/login`, {query: {username, verified: true}, password})
-            .map(res => res)
+            .map((res: User): User => res)
             .catch(this.handleError);
     }
 
-    public findUser(query, projection?, options?): Observable<any> {
+    public findUser(query, projection?, options?): Observable<User[]> {
         return this.http
             .post(`${this._url}/users/find`, {query, projection, options})
-            .map(res => res)
+            .map((res: User[]): User[] => res)
             .catch(this.handleError);
     }
 
-    public setUsername(username: string, userId: string): Observable<any> {
+    public setUsername(username: string, userId: string): Observable<string> {
         return this.http
             .post(`${this._url}/users/set-username`, {username, userId})
-            .map(res => res)
+            .map((res:string): string => res)
             .catch(this.handleError);
     }
 
     public getContactList(userId: string): Observable<UserInfo[]> {
         return this.http
             .get(`${this._url}/users/contact-list/${userId}`)
-            .map(res => res)
+            .map((res: UserInfo[]): UserInfo[] => res)
             .catch(this.handleError);
     }
 
-    public addContact(userInfo: any, userId: string): any {
+    public addContact(userInfo: any, userId: string): Observable<UserInfo> {
         return this.http
             .post(`${this._url}/users/add-contact`, {userInfo, sender: userId})
-            .map(res => res)
+            .map((res: UserInfo): UserInfo => res)
             .catch(this.handleError)
     }
 

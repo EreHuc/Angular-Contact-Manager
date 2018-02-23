@@ -53,7 +53,7 @@ export class VerifyComponent implements OnInit {
 			this.daoService.setUsername(username.trim().toLowerCase(), this.appState.get('userId'))
 				.subscribe(data => {
 					this.submit = false;
-					this.appState.set('username', data.username);
+					this.appState.set('username', data);
 					this.appState.set('connected', true);
 					this.router.navigateByUrl(`/profile/${data}`);
 				}, err => {
@@ -76,7 +76,7 @@ export class VerifyComponent implements OnInit {
 		let username = event.target.value.trim().toLowerCase();
 		this.nameTaken = false;
 		if (username) {
-			this.daoService.findUser({username}, {verified: 0, createdAt: 0, token: 0})
+			this.daoService.findUser({username}, {token: 0})
 				.subscribe(data => {
 					if (data.length) {
 						this.nameTaken = true;

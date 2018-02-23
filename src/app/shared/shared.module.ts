@@ -16,6 +16,7 @@ import { MatCardModule, MatDividerModule, MatListModule } from '@angular/materia
 import { NaPipe } from './pipe/na.pipe';
 import { AddContactService } from './service/add-contact.service';
 import { AddContactComponent } from '../private/add-contact/add-contact.component';
+import { JohnDoePipe } from './pipe/john-doe.pipe';
 
 @NgModule({
     imports: [
@@ -32,7 +33,8 @@ import { AddContactComponent } from '../private/add-contact/add-contact.componen
         LoadingComponent,
         SpinnerBtnComponent,
         ContactCardComponent,
-        NaPipe
+        NaPipe,
+        JohnDoePipe
     ],
     entryComponents: [
         AddContactComponent

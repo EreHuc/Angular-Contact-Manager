@@ -235,7 +235,7 @@ const setUsername = (req, res) => {
             }
           )
             .then(() => {
-              res.send({ username });
+              res.send(username);
             })
             .catch((err) => {
               res.send(500, err);
@@ -293,6 +293,7 @@ const addContact = (req, res) => {
     createdAt: new Date()
   };
   userInfoObj.birthdate = new Date(userInfoObj.birthdate);
+  userInfoObj.profilePicture = userInfoObj.profilePicture ? userInfoObj.profilePicture : `http://${process.env.host}:${process.env.port}/people.png`;
   findUsers({ username: userInfoObj.email })
     .then((users) => {
       if (users.length) {
@@ -311,13 +312,13 @@ const addContact = (req, res) => {
             res.status(500).send(errUserInfoSave.message);
             error('createUser', 'users.crud.js:71', errUserInfoSave);
           }
+          const update = { $push: { contactIds: userInfo.userId } };
+          updateManyUsers({ _id: sender }, update)
+            .catch((err) => {
+              error('addContact', 'users.crud.js', err);
+            });
           res.send(userInfo);
         });
-        const update = { $push: { contactIds: sender } };
-        updateManyUsers({ _id: sender }, update)
-          .catch((err) => {
-            error('addContact', 'users.crud.js', err);
-          });
       });
     })
     .catch((err) => {

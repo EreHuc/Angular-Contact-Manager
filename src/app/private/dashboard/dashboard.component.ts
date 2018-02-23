@@ -5,7 +5,7 @@ import { USERS } from './mock-users';
 import { MatDialog } from '@angular/material';
 import { AddContactComponent } from '../add-contact/add-contact.component';
 import { GooglePlaceDirective } from 'ngx-google-places-autocomplete';
-import { UserInfo } from '../../user-info';
+import { UserInfo } from '../../shared/user-info';
 
 @Component({
     selector: 'dashboard',
@@ -42,6 +42,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
                 const currentUserId = this.appState.get('userId');
                 this.daoService.addContact(contactInfo, currentUserId).subscribe(data => {
                     console.log('dashboard.component.ts:41 -', data);
+                    this.users.push(data);
                 }, err => {
                     // TODO: Notify on error
                     console.error(err);

@@ -1,4 +1,4 @@
-import { UserInfo } from '../../user-info';
+import { UserInfo } from '../../shared/user-info';
 
 export const USERS: UserInfo[] = [
     {

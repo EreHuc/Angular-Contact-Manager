@@ -20,6 +20,10 @@ export class AddContactComponent implements OnInit {
     ngOnInit() {
     }
 
+    public handleAddressChange(event) {
+        this.addContactForm.value.address = event.formatted_address;
+    }
+
     private buildForm(): FormGroup {
         return new FormGroup({
             firstname: new FormControl('', Validators.required),

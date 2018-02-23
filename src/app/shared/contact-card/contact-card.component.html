@@ -4,28 +4,28 @@
             <img [src]="user.profilePicture" width="40" height="40">
         </div>
         <mat-card-title>{{ user.firstname }} {{ user.lastname | uppercase }}</mat-card-title>
-        <mat-card-subtitle>@{{ user.username }}</mat-card-subtitle>
+        <mat-card-subtitle>@{{ user.username | johnDoe }}</mat-card-subtitle>
     </mat-card-header>
     <mat-divider></mat-divider>
     <mat-card-content>
         <mat-list>
-            <mat-list-item>
+            <mat-list-item class="email">
                 <i class="material-icons">email</i>
-                <span>
+                <span class="contact-detail">
                     {{ user.email }}
                 </span>
             </mat-list-item>
             <hr>
-            <mat-list-item>
+            <mat-list-item class="phone">
                 <i class="material-icons">phone</i>
-                <span>
+                <span class="contact-detail">
                     {{ user.phone | NA }}
                 </span>
             </mat-list-item>
             <hr>
-            <mat-list-item>
+            <mat-list-item class="address">
                 <i class="material-icons">location_on</i>
-                <span>
+                <span class="contact-detail">
                     {{ user.address | NA }}
                 </span>
             </mat-list-item>

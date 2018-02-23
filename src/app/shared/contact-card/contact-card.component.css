@@ -21,10 +21,6 @@ hr {
     margin: 0;
 }
 
-.mat-list-item-content > span {
-    font-size: 0.75em;
-}
-
 .material-icons {
     font-size: 0.9em;
     margin-right: 5px;
@@ -47,4 +43,12 @@ hr {
     -webkit-box-pack: center;
     -ms-flex-pack: center;
     justify-content: center;
+}
+.email, .phone, .address {
+    display: block;
+    overflow: hidden;
+}
+
+.contact-detail {
+    font-size: 0.7em;
 }
