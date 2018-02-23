@@ -1,70 +1,52 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { AppState } from '../../shared/service/app.service';
 import { DaoService } from '../../shared/service/dao.service';
 import { USERS } from './mock-users';
+import { MatDialog } from '@angular/material';
+import { AddContactComponent } from '../add-contact/add-contact.component';
+import { GooglePlaceDirective } from 'ngx-google-places-autocomplete';
+import { UserInfo } from '../../user-info';
 
 @Component({
-	selector: 'dashboard',
-	templateUrl: './dashboard.component.html',
-	styleUrls: ['./dashboard.component.css']
+    selector: 'dashboard',
+    templateUrl: './dashboard.component.html',
+    styleUrls: ['./dashboard.component.css']
 })
 
 export class DashboardComponent implements OnInit, AfterViewInit {
-	public users = USERS;
+    public users:UserInfo[] = USERS;
+    @ViewChild("placesRef") placesRef : GooglePlaceDirective;
 
-	constructor(public appState: AppState, private daoService: DaoService) {
+    constructor(public appState: AppState, private daoService: DaoService, private dialog: MatDialog) {
 
-	}
+    }
 
-	public ngOnInit() {
+    public ngOnInit() {
+        this.daoService.getContactList(this.appState.get('userId')).subscribe((users) => {
+            this.users = users;
+        })
+    }
 
-	}
+    public ngAfterViewInit() {
 
-	public ngAfterViewInit() {
+    }
 
-	}
+    public openAddContactDialog() {
+        const addContactDialog = this.dialog.open(AddContactComponent, {
+            width: '50%',
+        });
+
+        addContactDialog.afterClosed().subscribe(contactInfo => {
+            if (contactInfo) {
+                console.log('dashboard.component.ts:39 -', contactInfo);
+                const currentUserId = this.appState.get('userId');
+                this.daoService.addContact(contactInfo, currentUserId).subscribe(data => {
+                    console.log('dashboard.component.ts:41 -', data);
+                }, err => {
+                    // TODO: Notify on error
+                    console.error(err);
+                })
+            }
+        })
+    }
 }
-/*
-import 'rxjs/add/operator/startWith';
-import 'rxjs/add/observable/merge';
-import 'rxjs/add/operator/map';
-import { merge } from 'rxjs/observable/merge';
-import { catchError, map, startWith, switchMap } from 'rxjs/operators';
-import { of } from 'rxjs/observable/of';
-import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
-import { UserInfo } from '../../user-info';
-
-public displayedColumns = ['profilePicture', 'firstname', 'lastname', 'email'];
-public dataSource: MatTableDataSource<UserInfo>;
-public resultsLength = 0;
-public isLoadingResults = true;
-public isRateLimitReached = false;
-@ViewChild(MatPaginator) paginator: MatPaginator;
-@ViewChild(MatSort) sort: MatSort;
-
-this.dataSource = new MatTableDataSource<UserInfo>();
-
-this.dataSource.sort = this.sort;
-		merge(this.paginator.page)
-			.pipe(
-				startWith({}),
-				switchMap(() => {
-					this.isLoadingResults = true;
-					return this.daoService.getContactList(this.appState.get('userId'));
-				}),
-				map((userInfo: UserInfo[]) => {
-					// Flip flag to show that loading has finished.
-					this.isLoadingResults = false;
-					this.isRateLimitReached = false;
-					this.resultsLength = userInfo.length;
-
-					return userInfo;
-				}),
-				catchError(() => {
-					this.isLoadingResults = false;
-					// Catch if the GitHub API has reached its rate limit. Return empty data.
-					this.isRateLimitReached = true;
-					return of([]);
-				})
-			).subscribe((userInfo: UserInfo[]) => this.dataSource.data = userInfo);
- */

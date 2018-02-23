@@ -1,10 +1,10 @@
 const usersCrud = require('../crud/users.crud');
 const userInfosCrud = require('../crud/user-infos.crud');
-const log = require('../lib/utils').log;
+const { log } = require('../lib/utils');
 
-module.exports = function (app) {
+module.exports = (app) => {
   if (process.env.NODE_ENV !== 'production') {
-    app.get('/api/', (req, res, next) => {
+    app.get('/api/', (req, res) => {
       log('API', 'api.js:8', 'api called');
       res.send(200);
     });
@@ -18,6 +18,7 @@ module.exports = function (app) {
   app.post('/api/users/login', usersCrud.loginUser);
   app.post('/api/users/set-username', usersCrud.setUsername);
   app.get('/api/users/contact-list/:userId', usersCrud.getContactList);
+  app.post('/api/users/add-contact', usersCrud.addContact);
 
   app.post('/api/users-infos/insert', userInfosCrud.createUserInfos);
   app.get('/api/users-infos/get', userInfosCrud.readUserInfos);

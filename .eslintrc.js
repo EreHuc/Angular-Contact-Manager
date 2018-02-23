@@ -16,6 +16,8 @@ module.exports = {
     'no-param-reassign': 1,
     'no-prototype-builtins': 1,
     'no-underscore-dangle': 0,
-    'prefer-rest-params': 1
+    'prefer-rest-params': 1,
+    'comma-dangle': 0,
+    'no-plusplus': 0
   }
 };

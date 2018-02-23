@@ -1,7 +1,6 @@
 const User = require('../collections/users.collection');
 const UserInfo = require('../collections/user-infos.collection');
-const error = require('../lib/utils').error;
-const hash = require('../lib/utils').hash;
+const { error, hash } = require('../lib/utils');
 
 const findUserInfos = (query, projection = {}, options = {}) => new Promise((resolve, reject) => {
   UserInfo.find(query, projection, options).select({ __v: 0 }).exec((err, data) => {
@@ -10,8 +9,8 @@ const findUserInfos = (query, projection = {}, options = {}) => new Promise((res
   });
 });
 
-const createUserInfos = (req, res, next) => {
-  const userInfos = req.body.userInfos;
+const createUserInfos = (req, res) => {
+  const { userInfos } = req.body;
   const currentUserInfo = new UserInfo(userInfos);
   currentUserInfo.save((err, data) => {
     if (err) {
@@ -22,10 +21,8 @@ const createUserInfos = (req, res, next) => {
   });
 };
 
-const readUserInfos = (req, res, next) => {
-  const query = req.query.query;
-  const projection = req.query.projection;
-  const options = req.query.options;
+const readUserInfos = (req, res) => {
+  const { query, projection, options } = req.query;
   findUserInfos(query, projection, options)
     .then((data) => {
       res.send(data);
@@ -36,9 +33,8 @@ const readUserInfos = (req, res, next) => {
     });
 };
 
-const updateUserInfos = (req, res, next) => {
-  const query = req.body.query;
-  const update = req.body.update;
+const updateUserInfos = (req, res) => {
+  const { query, update } = req.body;
 
   UserInfo.updateMany(query, update, (err, data) => {
     if (err) {
@@ -49,9 +45,9 @@ const updateUserInfos = (req, res, next) => {
   });
 };
 
-const deleteUserInfos = (req, res, next) => {
-  const query = req.body.query;
-  UserInfo.deleteMany(query, (err, data) => {
+const deleteUserInfos = (req, res) => {
+  const { query } = req.body;
+  UserInfo.deleteMany(query, (err) => {
     if (err) {
       res.send(500, err.message);
       error('deleteIserInfos', 'user-infos.crud.js:58', err);
@@ -59,7 +55,7 @@ const deleteUserInfos = (req, res, next) => {
   });
 };
 
-const generateFake = (req, res, next) => {
+const generateFake = (req, res) => {
   User.findOne({ username: 'admin' }, (err, user) => {
     const generateFakeData = (number) => {
       const fakeData = [];
@@ -76,9 +72,10 @@ const generateFake = (req, res, next) => {
     (function saveFakeData(datas, i) {
       if (datas.length) {
         const userInfos = new UserInfo(datas[0]);
-        userInfos.save().then((userInfos) => {
-          User.update({ _id: user._id }, { $push: { contactIds: userInfos._id } }, (err, upd) => {
+        userInfos.save().then((userInfosDatas) => {
+          User.update({ _id: user._id }, { $push: { contactIds: userInfosDatas._id } }, () => {
             datas.splice(0, 1);
+            // eslint-disable-next-line no-param-reassign
             saveFakeData(datas, ++i);
           });
         });

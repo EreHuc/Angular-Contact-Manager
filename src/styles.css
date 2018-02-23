@@ -333,3 +333,11 @@ body {
     }
 }
 
+.btn-info.mat-raised-button {
+    color: white;
+}
+
+.btn-info[disabled], .btn-info[disabled]:hover, .btn-info[disabled]:focus {
+    background-color: rgba(0, 0, 0, .12) !important;
+    color: rgba(0, 0, 0, .26) !important;
+}

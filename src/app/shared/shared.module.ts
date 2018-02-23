@@ -14,38 +14,44 @@ import { SpinnerBtnComponent } from './spiner-btn/spinner-btn.component';
 import { ContactCardComponent } from './contact-card/contact-card.component';
 import { MatCardModule, MatDividerModule, MatListModule } from '@angular/material';
 import { NaPipe } from './pipe/na.pipe';
+import { AddContactService } from './service/add-contact.service';
+import { AddContactComponent } from '../private/add-contact/add-contact.component';
 
 @NgModule({
-	imports: [
-		CommonModule,
-		MatCardModule,
-		MatDividerModule,
-		MatListModule
-	],
-	declarations: [
-		FocusedDirective,
-		SlimScroll,
-		WaveDirective,
-		WaveRippleDirective,
-		LoadingComponent,
-		SpinnerBtnComponent,
-		ContactCardComponent,
-		NaPipe
-	],
-	providers: [
-		AppState,
-		DaoService,
-		UtilsService
-	],
-	exports: [
-		FocusedDirective,
-		SlimScroll,
-		WaveDirective,
-		WaveRippleDirective,
-		LoadingComponent,
-		SpinnerBtnComponent,
-		ContactCardComponent
-	]
+    imports: [
+        CommonModule,
+        MatCardModule,
+        MatDividerModule,
+        MatListModule
+    ],
+    declarations: [
+        FocusedDirective,
+        SlimScroll,
+        WaveDirective,
+        WaveRippleDirective,
+        LoadingComponent,
+        SpinnerBtnComponent,
+        ContactCardComponent,
+        NaPipe
+    ],
+    entryComponents: [
+        AddContactComponent
+    ],
+    providers: [
+        AppState,
+        DaoService,
+        UtilsService,
+        AddContactService
+    ],
+    exports: [
+        FocusedDirective,
+        SlimScroll,
+        WaveDirective,
+        WaveRippleDirective,
+        LoadingComponent,
+        SpinnerBtnComponent,
+        ContactCardComponent
+    ]
 })
 
 export class SharedModule {

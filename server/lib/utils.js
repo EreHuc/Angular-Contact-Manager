@@ -1,10 +1,13 @@
+/* eslint-disable no-console */
 const chalk = require('chalk');
 
 function hash(length) {
   let text = '';
   const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
-  for (let i = 0; i < length; i++) { text += possible.charAt(Math.floor(Math.random() * possible.length)); }
+  for (let i = 0; i < length; i++) {
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+  }
 
   return text;
 }
@@ -21,28 +24,28 @@ function log(method, file, ...data) {
   console.log(`
 ${chalk`///////////////////////////`}
 ${chalk`{bold ${method}}`}
-	`);
+`);
   data.forEach((elm) => {
     console.log(elm);
   });
   console.log(`
 ${chalk`{rgb(255, 235, 58).underline ${file}}`}
 ${chalk`///////////////////////////`}
-	`);
+`);
 }
 
 function error(method, file, ...data) {
   console.log(`
 ${chalk`{red ///////////////////////////}`}
 ${chalk`{bold.red ${method}}`}
-	`);
+`);
   data.forEach((elm) => {
     console.log(elm);
   });
   console.log(`
 ${chalk`{red.underline ${file}}`}
 ${chalk`{red ///////////////////////////}`}
-	`);
+`);
 }
 
 module.exports = {

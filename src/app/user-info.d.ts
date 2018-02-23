@@ -1,9 +1,14 @@
 export interface UserInfo {
-	_id: string;
-	firstname: string;
-	lastname: string;
-	email: string;
-	createdAt: Date;
-	profilePicture: string;
-	userId: string;
+    _id?: string | null;
+    firstname: string,
+    lastname: string,
+    birthday?: Date | null,
+    sexe?: string | null,
+    address?: string | null,
+    profilePicture: string,
+    profileCover?: string | null,
+    userId: string,
+    createdAt: Date,
+    email: string,
+    username?: string | null
 }

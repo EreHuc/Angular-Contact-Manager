@@ -24,8 +24,7 @@
         "../node_modules/bootstrap/dist/css/bootstrap.min.css",
         "../node_modules/adminbsb-materialdesign/css/style.min.css",
         "../node_modules/adminbsb-materialdesign/css/themes/all-themes.min.css",
-        "../node_modules/node-waves/dist/waves.min.css",
-        "../node_modules/ngx-toastr/toastr.css"
+        "../node_modules/node-waves/dist/waves.min.css"
       ],
       "scripts": [
       ],
@@ -44,14 +43,6 @@
   "lint": [
     {
       "project": "src/tsconfig.app.json",
-      "exclude": "**/node_modules/**"
-    },
-    {
-      "project": "src/tsconfig.spec.json",
-      "exclude": "**/node_modules/**"
-    },
-    {
-      "project": "e2e/tsconfig.e2e.json",
       "exclude": "**/node_modules/**"
     }
   ],

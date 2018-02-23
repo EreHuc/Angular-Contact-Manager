@@ -6,8 +6,8 @@ const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-const error = require('./lib/utils').error;
-const log = require('./lib/utils').log;
+const { error, log } = require('./lib/utils');
+const api = require('./api/api');
 
 const app = express();
 
@@ -16,40 +16,40 @@ const mongoUri = process.env.NODE_ENV === 'production' ? process.env.MONGODB_URI
 // uncomment after placing your favicon in /public
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '../dist')));
 app.use(express.static(path.join(__dirname, '/assets')));
 
 app.use((req, res, next) => {
-	res.header('Access-Control-Allow-Origin', '*');
-	res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-	res.header('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT');
-	next();
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  res.header('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT');
+  next();
 });
 
 app.use((err, req, res, next) => {
-	console.log(err);
-	next();
+  error('catchError', 'app.js:32', err);
+  next();
 });
 mongoose.connect(`${mongoUri}/test`);
 const db = mongoose.connection;
 mongoose.Promise = global.Promise;
 db.on('error', () => {
-	throw new Error('MongoDB Connection Error. Please make sure that MongoDB is running.');
+  throw new Error('MongoDB Connection Error. Please make sure that MongoDB is running.');
 });
 
 db.once('open', () => {
-	log('Mongoose', 'app.js:47', 'Connected to MongoDB');
-	process.on('uncaughtException', (err) => {
-		error('uncaughtException', 'app.js:49', err);
-	});
-	require('./api/api')(app);
-	if (process.env.NODE_ENV === 'production') {
-		app.get('/*', (req, res) => {
-			res.sendFile(path.join(__dirname, '../dist/index.html'));
-		});
-	}
+  log('Mongoose', 'app.js:47', 'Connected to MongoDB');
+  process.on('uncaughtException', (err) => {
+    error('uncaughtException', 'app.js:49', err);
+  });
+  api(app);
+  if (process.env.NODE_ENV === 'production') {
+    app.get('/*', (req, res) => {
+      res.sendFile(path.join(__dirname, '../dist/index.html'));
+    });
+  }
 });
 
 module.exports = app;
