@@ -87,5 +87,10 @@ const generateFake = (req, res) => {
 };
 
 module.exports = {
-  createUserInfos, readUserInfos, updateUserInfos, deleteUserInfos, findUserInfos, generateFake,
+  createUserInfos,
+  readUserInfos,
+  updateUserInfos,
+  deleteUserInfos,
+  findUserInfos,
+  generateFake
 };

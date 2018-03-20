@@ -48,6 +48,25 @@ ${chalk`{red ///////////////////////////}`}
 `);
 }
 
+const throwError = (res, err, status = 500) => {
+  res.status(status).send(err);
+};
+
+const sendData = (res, data) => {
+  res.send(data);
+};
+
+const createMongooseObject = Model => data => new Model(data);
+
+const freezeObject = object => Object.freeze(object);
+
 module.exports = {
-  parseJson, hash, log, error,
+  parseJson,
+  hash,
+  log,
+  error,
+  throwError,
+  sendData,
+  createMongooseObject,
+  freezeObject
 };
